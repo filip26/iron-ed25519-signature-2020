@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+ <modelVersion>4.0.0</modelVersion>
+ 
+ <parent>
+    <groupId>com.apicatalog</groupId>
+    <artifactId>ed25519</artifactId>
+    <version>0.8.1-SNAPSHOT</version>
+    <relativePath>pom_parent.xml</relativePath>
+  </parent>
+
+  <artifactId>iron-ed25519-signature-suite</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Iron Ed25519 Signature Suite (JRE17)</name>
+
+  <url>https://github.com/filip26/iron-ed25519-signature-suite</url>
+
+  <scm>
+    <connection>scm:git:git://github.com/filip26/iron-ed25519-signature-suite.git</connection>
+    <developerConnection>scm:git:git://github.com/filip26/iron-ed25519-signature-suite.git</developerConnection>
+    <url>https://github.com/filip26/iron-ed25519-signature-suite/tree/main</url>
+  </scm>
+
+  <properties>
+    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <envSources>src/main/java17</envSources>
+    <iron.version>0.8.1-SNAPSHOT</iron.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.apicatalog</groupId>
+      <artifactId>iron-verifiable-credentials</artifactId>
+      <version>${iron.version}</version>
+    </dependency>
+  </dependencies>
+
+</project>
