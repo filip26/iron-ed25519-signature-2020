@@ -42,7 +42,7 @@ class NativeSignatureProvider implements SignatureAlgorithm {
 
         } catch (InvalidParameterSpecException | InvalidKeySpecException | InvalidKeyException
                 | NoSuchAlgorithmException | SignatureException e) {
-            throw new VerificationError(e);
+            throw new VerificationError(Code.InvalidSignature, e);
         }
     }
 
@@ -59,7 +59,7 @@ class NativeSignatureProvider implements SignatureAlgorithm {
 
         } catch (InvalidParameterSpecException | InvalidKeySpecException | InvalidKeyException
                 | NoSuchAlgorithmException | SignatureException e) {
-            throw new SigningError(e);
+            throw new SigningError(SigningError.Code.Internal, e);
         }
     }
 

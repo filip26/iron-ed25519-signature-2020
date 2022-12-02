@@ -8,7 +8,7 @@ import com.apicatalog.ld.signature.key.VerificationKey;
 public record Ed25519VerificationKey2020(
         URI id,
         URI controller,
-        String type,
+        URI type,
         byte[] publicKey
         ) implements VerificationKey {
 
