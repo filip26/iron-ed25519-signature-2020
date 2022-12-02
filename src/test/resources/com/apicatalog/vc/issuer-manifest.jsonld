@@ -10,14 +10,14 @@
     "name": "Verifiable Credentials Issuer Test Suite",
     "sequence": [
         {
-            "@id": "#t0020",
+            "@id": "#t0001",
             "@type": [
                 "PositiveEvaluationTest",
                 "IssuerTest"
             ],
             "name": "a simple credential to sign",
-            "input": "issuer/0020-in.jsonld",
-            "expect": "issuer/0020-out.jsonld",
+            "input": "issuer/0001-in.jsonld",
+            "expect": "issuer/0001-out.jsonld",
             "options": {
                 "keyPair": "issuer/0001-keys.json",
                 "verificationMethod": "verifier/0005-verification-key.json",
@@ -25,14 +25,14 @@
             }
         },
         {
-            "@id": "#t0021",
+            "@id": "#t0002",
             "@type": [
                 "PositiveEvaluationTest",
                 "IssuerTest"
             ],
             "name": "compacted signed credential",
-            "input": "issuer/0021-in.jsonld",
-            "expect": "issuer/0021-out.jsonld",
+            "input": "issuer/0002-in.jsonld",
+            "expect": "issuer/0002-out.jsonld",
             "context": "issuer/0001-context.jsonld",
             "options": {
                 "keyPair": "issuer/0001-keys.json",
@@ -41,14 +41,14 @@
             }
         },
         {
-            "@id": "#t0022",
+            "@id": "#t0003",
             "@type": [
                 "PositiveEvaluationTest",
                 "IssuerTest"
             ],
             "name": "signed embedded verificationMethod",
-            "input": "issuer/0022-in.jsonld",
-            "expect": "issuer/0022-out.jsonld",
+            "input": "issuer/0003-in.jsonld",
+            "expect": "issuer/0003-out.jsonld",
             "context": "issuer/0001-context.jsonld",
             "options": {
                 "keyPair": "issuer/0001-keys.json",
@@ -62,14 +62,14 @@
             }
         },
         {
-            "@id": "#t0023",
+            "@id": "#t0004",
             "@type": [
                 "PositiveEvaluationTest",
                 "IssuerTest"
             ],
             "name": "a credential with DID key as a verification method",
-            "input": "issuer/0023-in.jsonld",
-            "expect": "issuer/0023-out.jsonld",
+            "input": "issuer/0004-in.jsonld",
+            "expect": "issuer/0004-out.jsonld",
             "context": "issuer/0001-context.jsonld",
             "options": {
                 "keyPair": "issuer/0001-keys.json",
@@ -78,14 +78,14 @@
             }
         },
         {
-            "@id": "#t0030",
+            "@id": "#t0005",
             "@type": [
                 "PositiveEvaluationTest",
                 "IssuerTest"
             ],
             "name": "proof set, co-sign",
-            "input": "issuer/0030-in.jsonld",
-            "expect": "issuer/0030-out.jsonld",
+            "input": "issuer/0005-in.jsonld",
+            "expect": "issuer/0005-out.jsonld",
             "context": "issuer/0001-context.jsonld",
             "options": {
                 "keyPair": "issuer/0001-keys.json",
@@ -98,14 +98,14 @@
             }
         },
         {
-            "@id": "#t0050",
+            "@id": "#t0006",
             "@type": [
                 "PositiveEvaluationTest",
                 "IssuerTest"
             ],
             "name": "compacted signed presentation",
-            "input": "issuer/0050-in.jsonld",
-            "expect": "issuer/0050-out.jsonld",
+            "input": "issuer/0006-in.jsonld",
+            "expect": "issuer/0006-out.jsonld",
             "context": "issuer/0001-context.jsonld",
             "options": {
                 "keyPair": "issuer/0001-keys.json",

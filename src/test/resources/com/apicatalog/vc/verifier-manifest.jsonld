@@ -10,88 +10,78 @@
     "name": "Verifiable Credentials Verifier Test Suite",
     "sequence": [
         {
-            "@id": "#t0005",
+            "@id": "#t0001",
             "@type": [
                 "PositiveEvaluationTest",
                 "VeriferTest"
             ],
             "name": "valid signed VC",
-            "input": "verifier/0005-in.jsonld"
+            "input": "verifier/0001-in.jsonld"
         },
         {
-            "@id": "#t0006",
+            "@id": "#t0002",
             "@type": [
                 "NegativeEvaluationTest",
                 "VeriferTest"
             ],
             "name": "forged credentials subject",
-            "input": "verifier/0006-in.jsonld",
+            "input": "verifier/0002-in.jsonld",
             "expectErrorCode": "InvalidSignature"
         },
         {
-            "@id": "#t0008",
+            "@id": "#t0003",
             "@type": [
                 "PositiveEvaluationTest",
                 "VeriferTest"
             ],
             "name": "valid VC with embedded verification method",
-            "input": "verifier/0008-in.jsonld"
+            "input": "verifier/0003-in.jsonld"
         },
         {
-            "@id": "#t0020",
+            "@id": "#t0004",
             "@type": [
                 "PositiveEvaluationTest",
                 "VeriferTest"
             ],
             "name": "proof set of two valid proofs",
-            "input": "verifier/0020-in.jsonld"
+            "input": "verifier/0004-in.jsonld"
         },
         {
-            "@id": "#t0021",
+            "@id": "#t0005",
             "@type": [
                 "NegativeEvaluationTest",
                 "VeriferTest"
             ],
             "name": "proof set having one forged proof",
-            "input": "verifier/0021-in.jsonld",
+            "input": "verifier/0005-in.jsonld",
             "expectErrorCode": "InvalidSignature"
         },
         {
-            "@id": "#t0022",
+            "@id": "#t0006",
             "@type": [
                 "PositiveEvaluationTest",
                 "VeriferTest"
             ],
             "name": "DID key as a verification method",
-            "input": "verifier/0022-in.jsonld"
+            "input": "verifier/0006-in.jsonld"
         },
         {
-            "@id": "#t0025",
-            "@type": [
-                "NegativeEvaluationTest",
-                "VeriferTest"
-            ],
-            "name": "did:key verification method",
-            "input": "verifier/0025-in.jsonld",
-            "expectErrorCode": "Expired"
-        },
-        {
-            "@id": "#t0050",
+            "@id": "#t0007",
             "@type": [
                 "PositiveEvaluationTest",
                 "VeriferTest"
             ],
             "name": "valid signed VP",
-            "input": "verifier/0050-in.jsonld"
+            "input": "verifier/0007-in.jsonld"
         },
         {
-            "@id": "#t0051",
+            "@id": "#t0008",
             "@type": [
                 "NegativeEvaluationTest",
                 "VeriferTest"
             ],
             "name": "forged signed VP",
-            "input": "verifier/0051-in.jsonld",
+            "input": "verifier/0008-in.jsonld",
             "expectErrorCode": "InvalidSignature"
         }
     ]
