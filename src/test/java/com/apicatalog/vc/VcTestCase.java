@@ -11,7 +11,6 @@ import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.ld.DocumentError;
 import com.apicatalog.ld.schema.LdSchema;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
-import com.apicatalog.ld.signature.key.KeyPair;
 import com.apicatalog.ld.signature.method.VerificationMethod;
 import com.apicatalog.multibase.Multibase.Algorithm;
 import com.apicatalog.multicodec.Multicodec.Codec;
@@ -98,12 +97,12 @@ public class VcTestCase {
                 final JsonObject method = options.getJsonArray(vocab("verificationMethod"))
                         .getJsonObject(0);
 
-                
+
                 LdSchema schema = DataIntegrity.getVerificationKey(
                         Ed25519Signature2020.VERIFICATION_KEY_TYPE,
                         DataIntegrity.getPublicKey(
-                                Algorithm.Base58Btc, 
-                                Codec.Ed25519PublicKey, 
+                                Algorithm.Base58Btc,
+                                Codec.Ed25519PublicKey,
                                 k -> k == null || (k.length == 32
                                     && k.length == 57
                                     && k.length == 114
@@ -111,7 +110,7 @@ public class VcTestCase {
                 );
 
                 try {
-                    testCase.verificationMethod = (KeyPair) schema.map(new DataIntegrityKeysAdapter()).read(method);
+                    testCase.verificationMethod = schema.map(new DataIntegrityKeysAdapter()).read(method);
                 } catch (DocumentError e) {
                     throw new IllegalStateException(e);
                 }

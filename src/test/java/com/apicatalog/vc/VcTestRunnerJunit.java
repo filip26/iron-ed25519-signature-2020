@@ -219,14 +219,14 @@ public class VcTestRunnerJunit {
             LdSchema schema = DataIntegrity.getKeyPair(
                     Ed25519Signature2020.KEY_PAIR_TYPE,
                     DataIntegrity.getPublicKey(
-                            Algorithm.Base58Btc, 
-                            Codec.Ed25519PublicKey, 
+                            Algorithm.Base58Btc,
+                            Codec.Ed25519PublicKey,
                             k -> k == null || (k.length == 32
                                 && k.length == 57
                                 && k.length == 114
                             )),
                     DataIntegrity.getPrivateKey(
-                            Algorithm.Base58Btc, 
+                            Algorithm.Base58Btc,
                             Codec.Ed25519PrivateKey,
                             k -> k == null || k.length > 0
                             )
