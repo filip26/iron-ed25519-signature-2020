@@ -35,6 +35,7 @@
       <groupId>com.apicatalog</groupId>
       <artifactId>iron-verifiable-credentials</artifactId>
       <version>${iron.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
