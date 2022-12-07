@@ -73,7 +73,7 @@
             "context": "issuer/0001-context.jsonld",
             "options": {
                 "keyPair": "issuer/0001-keys.json",
-                "verificationMethod": "did:key:z6Mkska8oQD7QQQWxqa7L5ai4mH98HfAdSwomPFYKuqNyE2y",
+                "verificationMethod": "did:key:z6Mkska8oQD7QQQWxqa7L5ai4mH98HfAdSwomPFYKuqNyE2y#z6Mkska8oQD7QQQWxqa7L5ai4mH98HfAdSwomPFYKuqNyE2y",
                 "created": "2022-05-28T17:02:05Z"
             }
         },
