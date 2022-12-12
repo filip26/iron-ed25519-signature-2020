@@ -70,7 +70,7 @@ try {
     // custom | suite specific | parameters
     .param(DataIntegrity.DOMAIN.name(), ....)
 
-    // assert valid document
+    // assert document validity
     .isValid();
     
 } catch (VerificationError | DataError e) {
@@ -85,21 +85,24 @@ try {
 var suite = new Ed25519Signature2020();
 
 var options = suite.createOptions()
+
     // proof options
     .verificationMethod(...)
     .purpose(...)
     .created(...)
+    
     // optional
     .domain(testCase.domain);
 
 Vc.sign(credential|presentation, keys, options)
+
    // optional
    .base(...)
    .loader(documentLoader) 
    .statusVerifier(...)
    .useBundledContexts(true|false)
 
-   // returns signed document in compacted form
+   // return signed document in a compacted form
    .getCompacted(context);
 
 ```
