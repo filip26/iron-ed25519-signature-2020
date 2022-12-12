@@ -10,17 +10,17 @@
     <relativePath>pom_parent.xml</relativePath>
   </parent>
 
-  <artifactId>iron-ed25519-signature-suite</artifactId>
+  <artifactId>iron-ed25519-cryptosuite-2020</artifactId>
   <packaging>jar</packaging>
 
-  <name>Iron Ed25519 Signature Suite (JRE17)</name>
+  <name>Iron Ed25519 Signature Suite 2020</name>
 
-  <url>https://github.com/filip26/iron-ed25519-signature-suite</url>
+  <url>https://github.com/filip26/iron-ed25519-cryptosuite-2020</url>
 
   <scm>
-    <connection>scm:git:git://github.com/filip26/iron-ed25519-signature-suite.git</connection>
-    <developerConnection>scm:git:git://github.com/filip26/iron-ed25519-signature-suite.git</developerConnection>
-    <url>https://github.com/filip26/iron-ed25519-signature-suite/tree/main</url>
+    <connection>scm:git:git://github.com/filip26/iron-ed25519-cryptosuite-2020.git</connection>
+    <developerConnection>scm:git:git://github.com/filip26/iron-ed25519-cryptosuite-2020.git</developerConnection>
+    <url>https://github.com/filip26/iron-ed25519-cryptosuite-2020/tree/main</url>
   </scm>
 
   <properties>
