@@ -59,7 +59,7 @@ compile group: 'com.apicatalog', name: 'iron-ed25519-cryptosuite-2020-jre8', ver
 
 ```java
 try {
-  Vc.verify(credential|presentation)
+  Vc.verify(credential|presentation, new Ed25519Signature2020())
       
     // optional
     .base(...)
