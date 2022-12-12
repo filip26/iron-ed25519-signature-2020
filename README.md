@@ -56,9 +56,53 @@ compile group: 'com.apicatalog', name: 'iron-ed25519-cryptosuite-2020-jre8', ver
 ## Usage
 
 ### Verifying 
-TBD
+
+```java
+try {
+  Vc.verify(credential|presentation)
+      
+    // optional
+    .base(...)
+    .loader(documentLoader) 
+    .statusVerifier(...)
+    .useBundledContexts(true|false)
+
+    // custom | suite specific | parameters
+    .param(DataIntegrity.DOMAIN.name(), ....)
+
+    // assert valid document
+    .isValid();
+    
+} catch (VerificationError | DataError e) {
+  ...
+}
+
+```
+
 ### Issuing
-TBD
+
+```java
+var suite = new Ed25519Signature2020();
+
+var options = suite.createOptions()
+    // proof options
+    .verificationMethod(...)
+    .purpose(...)
+    .created(...)
+    // optional
+    .domain(testCase.domain);
+
+Vc.sign(credential|presentation, keys, options)
+   // optional
+   .base(...)
+   .loader(documentLoader) 
+   .statusVerifier(...)
+   .useBundledContexts(true|false)
+
+   // returns signed document in compacted form
+   .getCompacted(context);
+
+```
 
 ## Contributing
 

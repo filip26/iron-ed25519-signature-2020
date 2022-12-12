@@ -38,6 +38,7 @@
 			<groupId>com.apicatalog</groupId>
 			<artifactId>iron-verifiable-credentials-jre8</artifactId>
 			<version>${iron.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>
