@@ -1,5 +1,6 @@
 package com.apicatalog.ld.signature.ed25519;
 
+import java.net.URI;
 import java.security.GeneralSecurityException;
 
 import com.apicatalog.ld.signature.KeyGenError;
@@ -14,6 +15,8 @@ import com.google.crypto.tink.subtle.Ed25519Verify;
 
 public final class Ed25519Signature2020Provider implements SignatureAlgorithm {
 
+    public static final URI ED25519_KEYPAIR_TYPE = URI.create("https://w3id.org/security#Ed25519KeyPair2020");
+    
     @Override
     public void verify(byte[] publicKey, byte[] signature, byte[] data) throws VerificationError {
         try {
@@ -42,7 +45,7 @@ public final class Ed25519Signature2020Provider implements SignatureAlgorithm {
             return signature;
 
         } catch (GeneralSecurityException e) {
-            throw new SigningError(e);
+            throw new SigningError(SigningError.Code.Internal, e);
         }
     }
 
@@ -55,7 +58,7 @@ public final class Ed25519Signature2020Provider implements SignatureAlgorithm {
             return new Ed25519KeyPair2020(
                             null,
                             null,
-                            "https://w3id.org/security#Ed25519KeyPair2020",
+                            ED25519_KEYPAIR_TYPE,
                             kp.getPublicKey(),
                             kp.getPrivateKey()
                         );

@@ -40,5 +40,10 @@
 			<version>${iron.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.crypto.tink</groupId>
+			<artifactId>tink</artifactId>
+			<version>${tink.version}</version>
+		</dependency>
 	</dependencies>
 </project>
