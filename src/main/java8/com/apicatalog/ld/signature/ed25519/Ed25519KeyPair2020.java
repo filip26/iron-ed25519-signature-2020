@@ -11,7 +11,7 @@ public final class Ed25519KeyPair2020 extends Ed25519VerificationKey2020 impleme
     public Ed25519KeyPair2020(
                 URI id,
                 URI controller,
-                String type,
+                URI type,
                 byte[] publicKey,
                 byte[] privateKey
                 ) {

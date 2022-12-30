@@ -8,13 +8,13 @@ public class Ed25519VerificationKey2020 implements VerificationKey {
 
     private final URI id;
     private final URI controller;
-    private final String type;
+    private final URI type;
     private final byte[] publicKey;
     
     public Ed25519VerificationKey2020(
             URI id,
             URI controller,
-            String type,
+            URI type,
             byte[] publicKey
             )  {
         this.id = id;
@@ -34,7 +34,7 @@ public class Ed25519VerificationKey2020 implements VerificationKey {
     }
 
     @Override
-    public String type() {
+    public URI type() {
         return type;
     }
 

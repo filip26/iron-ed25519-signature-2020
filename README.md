@@ -12,10 +12,9 @@ An implementation of the [EdDSA Cryptosuite 2020](https://w3c-ccg.github.io/di-e
 
 ## Features
 
-* Verifying VC/VP   
-* Issuing VC/VP
-* Signature
-  * [Ed25519Signature2020](https://w3c-ccg.github.io/di-eddsa-2020/#ed25519signature2020)
+* [Ed25519Signature2020](https://w3c-ccg.github.io/di-eddsa-2020/#ed25519signature2020)
+  * Verifying VC/VP
+  * Issuing VC/VP
 * [VC HTTP API & Service](https://github.com/filip26/iron-vc-api)
 
 ## Installation
@@ -59,7 +58,7 @@ compile group: 'com.apicatalog', name: 'iron-ed25519-cryptosuite-2020-jre8', ver
 
 ```java
 try {
-  Vc.verify(credential|presentation)
+  Vc.verify(credential|presentation, new Ed25519Signature2020())
       
     // optional
     .base(...)
