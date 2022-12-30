@@ -28,6 +28,11 @@ An implementation of the [EdDSA Cryptosuite 2020](https://w3c-ccg.github.io/di-e
     <version>0.8.1</version>
 </dependency>
 
+<dependency>
+    <groupId>com.apicatalog</groupId>
+    <artifactId>iron-verifiable-credentials</artifactId>
+    <version>0.8.1</version>
+</dependency>
 ```
 
 or
@@ -37,6 +42,12 @@ or
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>iron-ed25519-cryptosuite-2020-jre8</artifactId>
+    <version>0.8.1</version>
+</dependency>
+
+<dependency>
+    <groupId>com.apicatalog</groupId>
+    <artifactId>iron-verifiable-credentials-jre8</artifactId>
     <version>0.8.1</version>
 </dependency>
 ```
