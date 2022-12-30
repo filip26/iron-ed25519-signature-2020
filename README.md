@@ -11,7 +11,6 @@ An implementation of the [EdDSA Cryptosuite 2020](https://w3c-ccg.github.io/di-e
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Features
-
 * [Ed25519Signature2020](https://w3c-ccg.github.io/di-eddsa-2020/#ed25519signature2020)
   * Verifying VC/VP
   * Issuing VC/VP
