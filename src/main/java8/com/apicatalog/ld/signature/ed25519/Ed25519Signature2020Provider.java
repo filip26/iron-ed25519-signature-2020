@@ -14,8 +14,6 @@ import com.google.crypto.tink.subtle.Ed25519Sign;
 import com.google.crypto.tink.subtle.Ed25519Verify;
 
 public final class Ed25519Signature2020Provider implements SignatureAlgorithm {
-
-    public static final URI ED25519_KEYPAIR_TYPE = URI.create("https://w3id.org/security#Ed25519KeyPair2020");
     
     @Override
     public void verify(byte[] publicKey, byte[] signature, byte[] data) throws VerificationError {
@@ -58,7 +56,7 @@ public final class Ed25519Signature2020Provider implements SignatureAlgorithm {
             return new Ed25519KeyPair2020(
                             null,
                             null,
-                            ED25519_KEYPAIR_TYPE,
+                            URI.create(Ed25519Signature2020.KEY_PAIR_TYPE.uri()),
                             kp.getPublicKey(),
                             kp.getPrivateKey()
                         );
