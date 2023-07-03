@@ -8,14 +8,14 @@ import java.util.stream.Collectors;
 import com.apicatalog.jsonld.json.JsonUtils;
 import com.apicatalog.jsonld.lang.Keywords;
 import com.apicatalog.jsonld.loader.DocumentLoader;
+import com.apicatalog.jsonld.schema.LdSchema;
 import com.apicatalog.ld.DocumentError;
-import com.apicatalog.ld.schema.LdSchema;
+import com.apicatalog.ld.signature.VerificationMethod;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
-import com.apicatalog.ld.signature.method.VerificationMethod;
 import com.apicatalog.multibase.Multibase.Algorithm;
 import com.apicatalog.multicodec.Multicodec.Codec;
-import com.apicatalog.vc.integrity.DataIntegrity;
 import com.apicatalog.vc.integrity.DataIntegrityKeysAdapter;
+import com.apicatalog.vc.integrity.DataIntegritySchema;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
@@ -98,9 +98,9 @@ public class VcTestCase {
                         .getJsonObject(0);
 
 
-                LdSchema schema = DataIntegrity.getVerificationKey(
+                LdSchema schema = DataIntegritySchema.getVerificationKey(
                         Ed25519Signature2020.VERIFICATION_KEY_TYPE,
-                        DataIntegrity.getPublicKey(
+                        DataIntegritySchema.getPublicKey(
                                 Algorithm.Base58Btc,
                                 Codec.Ed25519PublicKey,
                                 k -> k == null || (k.length == 32

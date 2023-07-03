@@ -20,17 +20,17 @@ import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
 import com.apicatalog.jsonld.loader.HttpLoader;
 import com.apicatalog.jsonld.loader.SchemeRouter;
+import com.apicatalog.jsonld.schema.LdSchema;
 import com.apicatalog.ld.DocumentError;
-import com.apicatalog.ld.schema.LdSchema;
 import com.apicatalog.ld.signature.SigningError;
 import com.apicatalog.ld.signature.VerificationError;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
+import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020Proof;
 import com.apicatalog.ld.signature.key.KeyPair;
-import com.apicatalog.ld.signature.proof.ProofOptions;
 import com.apicatalog.multibase.Multibase.Algorithm;
 import com.apicatalog.multicodec.Multicodec.Codec;
-import com.apicatalog.vc.integrity.DataIntegrity;
 import com.apicatalog.vc.integrity.DataIntegrityKeysAdapter;
+import com.apicatalog.vc.integrity.DataIntegritySchema;
 import com.apicatalog.vc.processor.Issuer;
 
 import jakarta.json.Json;
@@ -66,7 +66,7 @@ public class VcTestRunnerJunit {
 
                 Vc.verify(testCase.input, new Ed25519Signature2020())
                         .loader(LOADER)
-                        .param(DataIntegrity.DOMAIN.name(), testCase.domain)
+                        .param(DataIntegritySchema.DOMAIN.name(), testCase.domain)
                         .isValid();
 
                 assertFalse(isNegative(), "Expected error " + testCase.result);
@@ -82,16 +82,23 @@ public class VcTestRunnerJunit {
                     keyPairLocation = URI.create(VcTestCase.base("issuer/0001-keys.json"));
                 }
 
-                final Ed25519Signature2020 suite = new Ed25519Signature2020();
+                final Ed25519Signature2020Proof draft = Ed25519Signature2020Proof.createDraft(
+//                      // proof options
+                        testCase.verificationMethod,
+                        URI.create("https://w3id.org/security#assertionMethod"),
+                        testCase.created,
+                        testCase.domain                        
+                        ); 
 
-                final ProofOptions options = suite.createOptions()
-                        // proof options
-                        .verificationMethod(testCase.verificationMethod)
-                        .purpose(URI.create("https://w3id.org/security#assertionMethod"))
-                        .created(testCase.created)
-                        .domain(testCase.domain);
+                
+//                final ProofOptions options = suite.createOptions()
+//                        // proof options
+//                        .verificationMethod(testCase.verificationMethod)
+//                        .purpose(URI.create("https://w3id.org/security#assertionMethod"))
+//                        .created(testCase.created)
+//                        .domain(testCase.domain);
 
-                final Issuer issuer = Vc.sign(testCase.input, getKeys(keyPairLocation, LOADER), options)
+                final Issuer issuer = Vc.sign(testCase.input, getKeys(keyPairLocation, LOADER), draft)
                         .loader(LOADER);
 
                 JsonObject signed = null;
@@ -216,16 +223,16 @@ public class VcTestRunnerJunit {
                 continue;
             }
 
-            LdSchema schema = DataIntegrity.getKeyPair(
+            LdSchema schema = DataIntegritySchema.getKeyPair(
                     Ed25519Signature2020.KEY_PAIR_TYPE,
-                    DataIntegrity.getPublicKey(
+                    DataIntegritySchema.getPublicKey(
                             Algorithm.Base58Btc,
                             Codec.Ed25519PublicKey,
                             k -> k == null || (k.length == 32
                                 && k.length == 57
                                 && k.length == 114
                             )),
-                    DataIntegrity.getPrivateKey(
+                    DataIntegritySchema.getPrivateKey(
                             Algorithm.Base58Btc,
                             Codec.Ed25519PrivateKey,
                             k -> k == null || k.length > 0

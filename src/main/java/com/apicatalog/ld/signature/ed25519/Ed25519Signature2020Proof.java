@@ -1,6 +1,8 @@
 package com.apicatalog.ld.signature.ed25519;
 
 import java.net.URI;
+import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.apicatalog.jsonld.schema.LdObject;
@@ -17,13 +19,14 @@ import com.apicatalog.multicodec.Multicodec.Codec;
 import com.apicatalog.vc.VcVocab;
 import com.apicatalog.vc.integrity.DataIntegritySchema;
 import com.apicatalog.vc.model.Proof;
+import com.apicatalog.vc.model.ProofValueProcessor;
 import com.apicatalog.vc.suite.SignatureSuite;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 
-public final class Ed25519Signature2020Proof implements Proof {
+public final class Ed25519Signature2020Proof implements Proof, ProofValueProcessor {
 
     static final CryptoSuite CRYPTO = new CryptoSuite(
             Ed25519Signature2020.ID.toString(),
@@ -65,7 +68,6 @@ public final class Ed25519Signature2020Proof implements Proof {
             CryptoSuite crypto,
             LdObject ldProof,
             JsonObject expanded
-
     ) {
         this.suite = suite;
         this.crypto = crypto;
@@ -129,7 +131,7 @@ public final class Ed25519Signature2020Proof implements Proof {
                         value))
                 .build();
     }
-    
+
     public static final Ed25519Signature2020Proof read(SignatureSuite suite, JsonObject expanded) throws DocumentError {
         final LdObject ldProof = PROOF_SCHEMA.read(expanded);
         return new Ed25519Signature2020Proof(suite, CRYPTO, ldProof, expanded);
@@ -137,5 +139,33 @@ public final class Ed25519Signature2020Proof implements Proof {
 
     public static final VerificationMethod readMethod(SignatureSuite suite, JsonObject expanded) throws DocumentError {
         return DataIntegritySchema.getEmbeddedMethod(METHOD_SCHEMA).read(expanded);
-    }    
+    }
+
+
+    @Override
+    public ProofValueProcessor valueProcessor() {
+        return this;
+    }
+
+    public static Ed25519Signature2020Proof createDraft(
+            VerificationMethod method, 
+            URI purpose, 
+            Instant created, 
+            String domain) throws DocumentError {
+
+      Map<String, Object> proof = new LinkedHashMap<>();
+
+      proof.put(LdTerm.TYPE.uri(), URI.create(Ed25519Signature2020.ID));
+      proof.put(DataIntegritySchema.CREATED.uri(), created);
+      proof.put(DataIntegritySchema.PURPOSE.uri(), purpose);
+      proof.put(DataIntegritySchema.VERIFICATION_METHOD.uri(), method);
+      proof.put(DataIntegritySchema.DOMAIN.uri(), domain);
+//      proof.put(DataIntegritySchema.CHALLENGE.uri(), challenge);
+
+      final LdObject ldProof = new LdObject(proof);
+      
+      JsonObject expanded = PROOF_SCHEMA.write(ldProof); 
+      
+      return new Ed25519Signature2020Proof(new Ed25519Signature2020(), CRYPTO, ldProof, expanded);
+    }
 }
