@@ -82,21 +82,12 @@ public class VcTestRunnerJunit {
                     keyPairLocation = URI.create(VcTestCase.base("issuer/0001-keys.json"));
                 }
 
-                final Ed25519Signature2020Proof draft = Ed25519Signature2020Proof.createDraft(
-//                      // proof options
+                // proof draft
+                final Ed25519Signature2020Proof draft = Ed25519Signature2020.createDraft(
                         testCase.verificationMethod,
-                        URI.create("https://w3id.org/security#assertionMethod"),
+                        URI.create("https://w3id.org/security#assertionMethod"), // purpose
                         testCase.created,
-                        testCase.domain                        
-                        ); 
-
-                
-//                final ProofOptions options = suite.createOptions()
-//                        // proof options
-//                        .verificationMethod(testCase.verificationMethod)
-//                        .purpose(URI.create("https://w3id.org/security#assertionMethod"))
-//                        .created(testCase.created)
-//                        .domain(testCase.domain);
+                        testCase.domain);
 
                 final Issuer issuer = Vc.sign(testCase.input, getKeys(keyPairLocation, LOADER), draft)
                         .loader(LOADER);
@@ -229,15 +220,12 @@ public class VcTestRunnerJunit {
                             Algorithm.Base58Btc,
                             Codec.Ed25519PublicKey,
                             k -> k == null || (k.length == 32
-                                && k.length == 57
-                                && k.length == 114
-                            )),
+                                    && k.length == 57
+                                    && k.length == 114)),
                     DataIntegritySchema.getPrivateKey(
                             Algorithm.Base58Btc,
                             Codec.Ed25519PrivateKey,
-                            k -> k == null || k.length > 0
-                            )
-            );
+                            k -> k == null || k.length > 0));
             return (KeyPair) schema.map(new DataIntegrityKeysAdapter()).read(key);
 
         }

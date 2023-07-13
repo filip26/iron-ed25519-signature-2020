@@ -91,19 +91,14 @@ try {
 ### Issuing
 
 ```java
-var suite = new Ed25519Signature2020();
+var proofDraft = Ed25519Signature2020.createDraft(
+    verificationMethod,
+    purpose,
+    created,    
+    domain     // optional
+    );
 
-var options = suite.createOptions()
-
-    // proof options
-    .verificationMethod(...)
-    .purpose(...)
-    .created(...)
-    
-    // optional
-    .domain(testCase.domain);
-
-Vc.sign(credential|presentation, keys, options)
+Vc.sign(credential|presentation, keys, proofDraft)
 
    // optional
    .base(...)
@@ -111,7 +106,7 @@ Vc.sign(credential|presentation, keys, options)
    .statusVerifier(...)
    .useBundledContexts(true|false)
 
-   // return signed document in a compacted form
+    // return signed document in a compacted form
    .getCompacted(context);
 
 ```
@@ -148,3 +143,4 @@ Fork and clone the project repository.
 
 ## Commercial Support
 Commercial support is available at filip26@gmail.com
+.

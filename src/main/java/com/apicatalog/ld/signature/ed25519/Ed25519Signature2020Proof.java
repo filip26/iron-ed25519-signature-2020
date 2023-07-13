@@ -137,28 +137,6 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
         return this;
     }
 
-    public static Ed25519Signature2020Proof createDraft(
-            VerificationMethod method,
-            URI purpose,
-            Instant created,
-            String domain) throws DocumentError {
-
-        Map<String, Object> proof = new LinkedHashMap<>();
-
-        proof.put(LdTerm.TYPE.uri(), URI.create(Ed25519Signature2020.ID));
-        proof.put(DataIntegritySchema.CREATED.uri(), created);
-        proof.put(DataIntegritySchema.PURPOSE.uri(), purpose);
-        proof.put(DataIntegritySchema.VERIFICATION_METHOD.uri(), method);
-        proof.put(DataIntegritySchema.DOMAIN.uri(), domain);
-//      proof.put(DataIntegritySchema.CHALLENGE.uri(), challenge);
-
-        final LdObject ldProof = new LdObject(proof);
-
-        JsonObject expanded = PROOF_SCHEMA.write(ldProof);
-
-        return new Ed25519Signature2020Proof(new Ed25519Signature2020(), CRYPTO, ldProof, expanded);
-    }
-
     @Override
     public String getContext() {
         return "https://w3id.org/security/suites/ed25519-2020/v1";
