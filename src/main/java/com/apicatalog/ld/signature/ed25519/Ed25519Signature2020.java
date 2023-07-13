@@ -35,7 +35,7 @@ public final class Ed25519Signature2020 implements SignatureSuite {
     public boolean isSupported(String proofType, JsonObject expandedProof) {
         return ID.equals(proofType);
     }
-    
+
     public static Ed25519Signature2020Proof createDraft(
             VerificationMethod method,
             URI purpose,
@@ -53,8 +53,12 @@ public final class Ed25519Signature2020 implements SignatureSuite {
 
         final LdObject ldProof = new LdObject(proof);
 
-        JsonObject expanded = Ed25519Signature2020Proof.PROOF_SCHEMA.write(ldProof);
+        final JsonObject expanded = Ed25519Signature2020Proof.PROOF_SCHEMA.write(ldProof);
 
-        return new Ed25519Signature2020Proof(new Ed25519Signature2020(), Ed25519Signature2020Proof.CRYPTO, ldProof, expanded);
+        return new Ed25519Signature2020Proof(
+                Ed25519Signature2020Proof.CRYPTO,
+                new MethodProcessor(new Ed25519Signature2020()),
+                ldProof,
+                expanded);
     }
 }

@@ -1,8 +1,6 @@
 package com.apicatalog.ld.signature.ed25519;
 
 import java.net.URI;
-import java.time.Instant;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.apicatalog.jsonld.schema.LdObject;
@@ -57,17 +55,20 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
             DataIntegritySchema.getEmbeddedMethod(METHOD_SCHEMA),
             PROOF_VALUE_PROPERTY);
 
-    final SignatureSuite suite;
     final CryptoSuite crypto;
     final LdObject ldProof;
     final JsonObject expanded;
+    
+    final MethodProcessor methodProcessor;
 
-    Ed25519Signature2020Proof(SignatureSuite suite,
+    Ed25519Signature2020Proof(
             CryptoSuite crypto,
+            MethodProcessor methodProcessor,
             LdObject ldProof,
             JsonObject expanded) {
-        this.suite = suite;
+
         this.crypto = crypto;
+        this.methodProcessor = methodProcessor;
         this.ldProof = ldProof;
         this.expanded = expanded;
     }
@@ -125,7 +126,11 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
 
     public static final Ed25519Signature2020Proof read(SignatureSuite suite, JsonObject expanded) throws DocumentError {
         final LdObject ldProof = PROOF_SCHEMA.read(expanded);
-        return new Ed25519Signature2020Proof(suite, CRYPTO, ldProof, expanded);
+        return new Ed25519Signature2020Proof(
+                        CRYPTO,
+                        new MethodProcessor(suite),
+                        ldProof, 
+                        expanded);
     }
 
     public static final VerificationMethod readMethod(SignatureSuite suite, JsonObject expanded) throws DocumentError {
@@ -144,6 +149,6 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
 
     @Override
     public VerificationMethodProcessor methodProcessor() {
-        return new MethodProcessor(suite);
+        return methodProcessor;
     }
 }

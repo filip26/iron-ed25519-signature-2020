@@ -107,7 +107,7 @@ Vc.sign(credential|presentation, keys, proofDraft)
    .useBundledContexts(true|false)
 
     // return signed document in a compacted form
-   .getCompacted(context);
+   .getCompacted();
 
 ```
 
