@@ -18,6 +18,7 @@ import com.apicatalog.multibase.Multibase.Algorithm;
 import com.apicatalog.multicodec.Multicodec.Codec;
 import com.apicatalog.vc.VcVocab;
 import com.apicatalog.vc.integrity.DataIntegritySchema;
+import com.apicatalog.vc.method.VerificationMethodProcessor;
 import com.apicatalog.vc.model.Proof;
 import com.apicatalog.vc.model.ProofValueProcessor;
 import com.apicatalog.vc.suite.SignatureSuite;
@@ -32,23 +33,20 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
             Ed25519Signature2020.ID.toString(),
             new Urdna2015(),
             new MessageDigest("SHA-256"),
-            new Ed25519Signature2020Provider()
-            );
+            new Ed25519Signature2020Provider());
 
     public static final LdTerm VERIFICATION_KEY_TYPE = LdTerm.create("Ed25519VerificationKey2020", VcVocab.SECURITY_VOCAB);
 
     public static final LdTerm KEY_PAIR_TYPE = LdTerm.create("Ed25519KeyPair2020", VcVocab.SECURITY_VOCAB);
-    
+
     static final LdSchema METHOD_SCHEMA = DataIntegritySchema.getVerificationKey(
             VERIFICATION_KEY_TYPE,
             DataIntegritySchema.getPublicKey(
                     Algorithm.Base58Btc,
                     Codec.Ed25519PublicKey,
                     key -> key == null || (key.length == 32
-                        && key.length == 57
-                        && key.length == 114
-                        ))
-                    );
+                            && key.length == 57
+                            && key.length == 114)));
 
     static final LdProperty<byte[]> PROOF_VALUE_PROPERTY = DataIntegritySchema.getProofValue(
             Algorithm.Base58Btc,
@@ -67,15 +65,13 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
     Ed25519Signature2020Proof(SignatureSuite suite,
             CryptoSuite crypto,
             LdObject ldProof,
-            JsonObject expanded
-    ) {
+            JsonObject expanded) {
         this.suite = suite;
         this.crypto = crypto;
         this.ldProof = ldProof;
         this.expanded = expanded;
     }
 
-    
     @Override
     public VerificationMethod getMethod() {
         return ldProof.value(DataIntegritySchema.VERIFICATION_METHOD);
@@ -99,11 +95,6 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
     @Override
     public CryptoSuite getCryptoSuite() {
         return crypto;
-    }
-
-    @Override
-    public SignatureSuite getSignatureSuite() {
-        return suite;
     }
 
     @Override
@@ -141,31 +132,40 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
         return DataIntegritySchema.getEmbeddedMethod(METHOD_SCHEMA).read(expanded);
     }
 
-
     @Override
     public ProofValueProcessor valueProcessor() {
         return this;
     }
 
     public static Ed25519Signature2020Proof createDraft(
-            VerificationMethod method, 
-            URI purpose, 
-            Instant created, 
+            VerificationMethod method,
+            URI purpose,
+            Instant created,
             String domain) throws DocumentError {
 
-      Map<String, Object> proof = new LinkedHashMap<>();
+        Map<String, Object> proof = new LinkedHashMap<>();
 
-      proof.put(LdTerm.TYPE.uri(), URI.create(Ed25519Signature2020.ID));
-      proof.put(DataIntegritySchema.CREATED.uri(), created);
-      proof.put(DataIntegritySchema.PURPOSE.uri(), purpose);
-      proof.put(DataIntegritySchema.VERIFICATION_METHOD.uri(), method);
-      proof.put(DataIntegritySchema.DOMAIN.uri(), domain);
+        proof.put(LdTerm.TYPE.uri(), URI.create(Ed25519Signature2020.ID));
+        proof.put(DataIntegritySchema.CREATED.uri(), created);
+        proof.put(DataIntegritySchema.PURPOSE.uri(), purpose);
+        proof.put(DataIntegritySchema.VERIFICATION_METHOD.uri(), method);
+        proof.put(DataIntegritySchema.DOMAIN.uri(), domain);
 //      proof.put(DataIntegritySchema.CHALLENGE.uri(), challenge);
 
-      final LdObject ldProof = new LdObject(proof);
-      
-      JsonObject expanded = PROOF_SCHEMA.write(ldProof); 
-      
-      return new Ed25519Signature2020Proof(new Ed25519Signature2020(), CRYPTO, ldProof, expanded);
+        final LdObject ldProof = new LdObject(proof);
+
+        JsonObject expanded = PROOF_SCHEMA.write(ldProof);
+
+        return new Ed25519Signature2020Proof(new Ed25519Signature2020(), CRYPTO, ldProof, expanded);
+    }
+
+    @Override
+    public String getContext() {
+        return "https://w3id.org/security/suites/ed25519-2020/v1";
+    }
+
+    @Override
+    public VerificationMethodProcessor methodProcessor() {
+        return new MethodProcessor(suite);
     }
 }
