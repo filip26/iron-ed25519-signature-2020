@@ -13,7 +13,6 @@ import com.apicatalog.ld.signature.VerificationMethod;
 import com.apicatalog.ld.signature.primitive.MessageDigest;
 import com.apicatalog.ld.signature.primitive.Urdna2015;
 import com.apicatalog.multibase.Multibase.Algorithm;
-import com.apicatalog.multicodec.Multicodec.Codec;
 import com.apicatalog.vc.VcVocab;
 import com.apicatalog.vc.integrity.DataIntegritySchema;
 import com.apicatalog.vc.method.VerificationMethodProcessor;
@@ -33,26 +32,13 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
             new MessageDigest("SHA-256"),
             new Ed25519Signature2020Provider());
 
-    public static final LdTerm VERIFICATION_KEY_TYPE = LdTerm.create("Ed25519VerificationKey2020", VcVocab.SECURITY_VOCAB);
-
-    public static final LdTerm KEY_PAIR_TYPE = LdTerm.create("Ed25519KeyPair2020", VcVocab.SECURITY_VOCAB);
-
-    static final LdSchema METHOD_SCHEMA = DataIntegritySchema.getVerificationKey(
-            VERIFICATION_KEY_TYPE,
-            DataIntegritySchema.getPublicKey(
-                    Algorithm.Base58Btc,
-                    Codec.Ed25519PublicKey,
-                    key -> key == null || (key.length == 32
-                            && key.length == 57
-                            && key.length == 114)));
-
     static final LdProperty<byte[]> PROOF_VALUE_PROPERTY = DataIntegritySchema.getProofValue(
             Algorithm.Base58Btc,
             key -> key.length == 64);
 
     static final LdSchema PROOF_SCHEMA = DataIntegritySchema.getProof(
             LdTerm.create("Ed25519Signature2020", VcVocab.SECURITY_VOCAB),
-            DataIntegritySchema.getEmbeddedMethod(METHOD_SCHEMA),
+            DataIntegritySchema.getEmbeddedMethod(MethodProcessor.METHOD_SCHEMA),
             PROOF_VALUE_PROPERTY);
 
     final CryptoSuite crypto;
@@ -131,10 +117,6 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
                         new MethodProcessor(suite),
                         ldProof, 
                         expanded);
-    }
-
-    public static final VerificationMethod readMethod(SignatureSuite suite, JsonObject expanded) throws DocumentError {
-        return DataIntegritySchema.getEmbeddedMethod(METHOD_SCHEMA).read(expanded);
     }
 
     @Override
