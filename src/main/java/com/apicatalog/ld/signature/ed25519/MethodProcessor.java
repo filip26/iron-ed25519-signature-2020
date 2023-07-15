@@ -25,8 +25,8 @@ class MethodProcessor implements VerificationMethodProcessor {
                     Algorithm.Base58Btc,
                     Codec.Ed25519PublicKey,
                     key -> key == null || (key.length == 32
-                            && key.length == 57
-                            && key.length == 114)));
+                            || key.length == 57
+                            || key.length == 114)));
     
     final SignatureSuite suite;
     
