@@ -133,6 +133,7 @@ Fork and clone the project repository.
 
 ## Resources
 * [EdDSA Cryptosuite 2020](https://w3c-ccg.github.io/di-eddsa-2020/)
+* [Interoperability Report](https://w3c-ccg.github.io/di-ed25519signature2020-test-suite/)
 * [Iron Verifiable Credentials](https://github.com/filip26/iron-verifiable-credentials)
 
 ## Sponsors
