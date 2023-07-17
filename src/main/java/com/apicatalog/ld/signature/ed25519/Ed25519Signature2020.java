@@ -41,15 +41,28 @@ public final class Ed25519Signature2020 implements SignatureSuite {
             URI purpose,
             Instant created,
             String domain) throws DocumentError {
+        return createDraft(method, purpose, created, domain, null);
+    }
+    
+    public static Ed25519Signature2020Proof createDraft(
+            VerificationMethod method,
+            URI purpose,
+            Instant created,
+            String domain,
+            String challenge) throws DocumentError {
 
-        Map<String, Object> proof = new LinkedHashMap<>();
+        final Map<String, Object> proof = new LinkedHashMap<>();
 
         proof.put(LdTerm.TYPE.uri(), URI.create(Ed25519Signature2020.ID));
         proof.put(DataIntegritySchema.CREATED.uri(), created);
         proof.put(DataIntegritySchema.PURPOSE.uri(), purpose);
         proof.put(DataIntegritySchema.VERIFICATION_METHOD.uri(), method);
-        proof.put(DataIntegritySchema.DOMAIN.uri(), domain);
-//      proof.put(DataIntegritySchema.CHALLENGE.uri(), challenge);
+        if (domain != null) {
+            proof.put(DataIntegritySchema.DOMAIN.uri(), domain);
+        }
+        if (challenge != null) {
+            proof.put(DataIntegritySchema.CHALLENGE.uri(), challenge);
+        }
 
         final LdObject ldProof = new LdObject(proof);
 
