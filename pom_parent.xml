@@ -52,8 +52,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<argLine>-Dfile.encoding=UTF-8</argLine>
 
-		<iron.version>0.8.1</iron.version>
-		<copper.version>0.0.1</copper.version>
+		<copper.version>0.0.2-SNAPSHOT</copper.version>
 		<jakarta.json.version>2.0.1</jakarta.json.version>
 
 		<!-- test resources -->
