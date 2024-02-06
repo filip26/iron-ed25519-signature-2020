@@ -16,4 +16,9 @@ public record Ed25519KeyPair2020(
     public Ed25519KeyPair2020 {
         Objects.requireNonNull(id);
     }
+
+    @Override
+    public String algorithm() {
+        return "ED25519";
+    }
 }

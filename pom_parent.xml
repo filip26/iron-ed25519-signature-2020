@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.apicatalog</groupId>
 	<artifactId>ed25519</artifactId>
-	<version>0.9.0-SNAPSHOT</version>
+	<version>0.10.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Iron Ed25519 Signature Suite 2020</name>
@@ -52,7 +52,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<argLine>-Dfile.encoding=UTF-8</argLine>
 
-		<copper.version>0.0.2-SNAPSHOT</copper.version>
+        <copper-base.version>0.4.0</copper-base.version>
+		<copper-codec.version>0.1.1</copper-codec.version>
 		<jakarta.json.version>2.0.1</jakarta.json.version>
 
 		<!-- test resources -->
@@ -63,8 +64,13 @@
 		<dependency>
 			<groupId>com.apicatalog</groupId>
 			<artifactId>copper-multicodec</artifactId>
-			<version>${copper.version}</version>
+			<version>${copper-codec.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>copper-multibase</artifactId>
+            <version>${copper-base.version}</version>
+        </dependency>		
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.json</artifactId>

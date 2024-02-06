@@ -16,6 +16,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdError;
 import com.apicatalog.jsonld.document.JsonDocument;
+import com.apicatalog.ld.signature.ed25519.VcTestCase;
+import com.apicatalog.ld.signature.ed25519.VcTestRunnerJunit;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;

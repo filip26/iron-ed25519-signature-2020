@@ -42,4 +42,9 @@ public class Ed25519VerificationKey2020 implements VerificationKey {
     public URI controller() {
         return controller;
     }
+    
+    @Override
+    public String algorithm() {
+        return "ED25519";
+    }
 }
