@@ -157,10 +157,4 @@ public class VcTestCase {
  * Algorithm.Base58Btc, Codec.Ed25519PublicKey, k -> k == null || (k.length ==
  * 32 && k.length == 57 && k.length == 114 )) );
  * 
- * 
- * static String da(String term) { return
- * "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#".concat(term); }
- * 
- * static String vocab(String term) { return base("tests/vocab#").concat(term);
- * }
  */

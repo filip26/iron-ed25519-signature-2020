@@ -58,7 +58,8 @@ class Ed25519KeyAdapter implements MethodAdapter {
 
         byte[] publicKey = null;
         byte[] privateKey = null;
-
+        System.out.println(document);
+System.out.println(">>> " + node.type().strings());
         if (node.type().hasType(KEY_PAIR_TYPE_URI.toString())) {
 
             type = KEY_PAIR_TYPE_URI;

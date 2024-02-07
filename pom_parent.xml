@@ -52,6 +52,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<argLine>-Dfile.encoding=UTF-8</argLine>
 
+        <carbon.version>0.2.0</carbon.version>
         <copper-base.version>0.4.0</copper-base.version>
 		<copper-codec.version>0.1.1</copper-codec.version>
 		<jakarta.json.version>2.0.1</jakarta.json.version>
@@ -71,6 +72,11 @@
             <artifactId>copper-multibase</artifactId>
             <version>${copper-base.version}</version>
         </dependency>		
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>carbon-did</artifactId>
+            <version>${carbon.version}</version>
+        </dependency>        
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.json</artifactId>
