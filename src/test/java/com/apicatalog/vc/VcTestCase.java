@@ -9,13 +9,8 @@ import com.apicatalog.jsonld.json.JsonUtils;
 import com.apicatalog.jsonld.lang.Keywords;
 import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.ld.DocumentError;
-import com.apicatalog.ld.schema.LdSchema;
-import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
-import com.apicatalog.ld.signature.method.VerificationMethod;
-import com.apicatalog.multibase.Multibase.Algorithm;
-import com.apicatalog.multicodec.Multicodec.Codec;
-import com.apicatalog.vc.integrity.DataIntegrity;
-import com.apicatalog.vc.integrity.DataIntegrityKeysAdapter;
+import com.apicatalog.ld.signature.VerificationMethod;
+import com.apicatalog.ld.signature.ed25519.Ed25519KeyAdapter;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
@@ -42,8 +37,14 @@ public class VcTestCase {
     public Instant created;
 
     public String domain;
+    
+    public String challenge;
+    
+    public String purpose;
 
     public URI context;
+    
+    public boolean compacted;
 
     public static VcTestCase of(JsonObject test, JsonObject manifest, DocumentLoader loader) {
 
@@ -69,6 +70,11 @@ public class VcTestCase {
                     .getJsonObject(0)
                     .getString(Keywords.ID));
         }
+
+        testCase.compacted = test.containsKey(vocab("compacted"))
+                && test.getJsonArray(vocab("compacted"))
+                .getJsonObject(0)
+                .getBoolean(Keywords.VALUE, false);
 
         if (test.containsKey(da("result"))) {
             final JsonObject result = test.getJsonArray(da("result")).getJsonObject(0);
@@ -97,20 +103,8 @@ public class VcTestCase {
                 final JsonObject method = options.getJsonArray(vocab("verificationMethod"))
                         .getJsonObject(0);
 
-
-                LdSchema schema = DataIntegrity.getVerificationKey(
-                        Ed25519Signature2020.VERIFICATION_KEY_TYPE,
-                        DataIntegrity.getPublicKey(
-                                Algorithm.Base58Btc,
-                                Codec.Ed25519PublicKey,
-                                k -> k == null || (k.length == 32
-                                    && k.length == 57
-                                    && k.length == 114
-                                ))
-                );
-
                 try {
-                    testCase.verificationMethod = schema.map(new DataIntegrityKeysAdapter()).read(method);
+                    testCase.verificationMethod = Ed25519KeyAdapter.from(method);
                 } catch (DocumentError e) {
                     throw new IllegalStateException(e);
                 }
@@ -125,6 +119,16 @@ public class VcTestCase {
                 testCase.domain = options.getJsonArray(vocab("domain")).getJsonObject(0)
                         .getString(Keywords.VALUE);
             }
+            
+            if (options.containsKey(vocab("challenge"))) {
+                testCase.challenge = options.getJsonArray(vocab("challenge")).getJsonObject(0)
+                        .getString(Keywords.VALUE);
+            }
+            
+            if (options.containsKey(vocab("purpose"))) {
+                testCase.purpose = options.getJsonArray(vocab("purpose")).getJsonObject(0)
+                        .getString(Keywords.VALUE);
+            }            
         }
 
         return testCase;
@@ -147,3 +151,11 @@ public class VcTestCase {
         return base("tests/vocab#").concat(term);
     }
 }
+
+/*
+ * LdSchema schema = DataIntegritySchema.getVerificationKey(
+ * Ed25519Signature2020.VERIFICATION_KEY_TYPE, DataIntegritySchema.getPublicKey(
+ * Algorithm.Base58Btc, Codec.Ed25519PublicKey, k -> k == null || (k.length ==
+ * 32 && k.length == 57 && k.length == 114 )) );
+ * 
+ */

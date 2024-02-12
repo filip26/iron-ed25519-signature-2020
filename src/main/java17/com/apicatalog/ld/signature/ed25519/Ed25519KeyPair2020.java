@@ -10,10 +10,14 @@ public record Ed25519KeyPair2020(
         URI controller,
         URI type,
         byte[] publicKey,
-        byte[] privateKey
-        ) implements KeyPair {
+        byte[] privateKey) implements KeyPair {
 
     public Ed25519KeyPair2020 {
         Objects.requireNonNull(id);
+    }
+
+    @Override
+    public String algorithm() {
+        return "ED25519";
     }
 }

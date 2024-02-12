@@ -1,62 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>ed25519</artifactId>
-    <version>0.8.1</version>
-    <packaging>pom</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.apicatalog</groupId>
+	<artifactId>ed25519</artifactId>
+	<version>0.10.0</version>
+	<packaging>pom</packaging>
 
-    <name>Iron Ed25519 Signature Suite 2020</name>
+	<name>Iron Ed25519 Signature Suite 2020</name>
 
-    <description>
+	<description>
         Verifiable Credentials Ed25519 Signature Suite 2020
     </description>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://apache.org/licenses/LICENSE-2.0</url>
-        </license>
-    </licenses>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
 
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/filip26/iron-ed25519-cryptosuite-2020/issues</url>
-    </issueManagement>
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/filip26/iron-ed25519-cryptosuite-2020/issues</url>
+	</issueManagement>
 
-    <url>https://github.com/filip26/iron-ed25519-cryptosuite-2020</url>
+	<url>https://github.com/filip26/iron-ed25519-cryptosuite-2020</url>
 
-    <scm>
-        <connection>scm:git:git://github.com/filip26/iron-ed25519-cryptosuite-2020.git</connection>
-        <developerConnection>scm:git:git://github.com/filip26/iron-ed25519-cryptosuite-2020.git</developerConnection>
-        <url>https://github.com/filip26/iron-ed25519-cryptosuite-2020/tree/main</url>
-    </scm>
+	<scm>
+		<connection>scm:git:git://github.com/filip26/iron-ed25519-cryptosuite-2020.git</connection>
+		<developerConnection>scm:git:git://github.com/filip26/iron-ed25519-cryptosuite-2020.git</developerConnection>
+		<url>https://github.com/filip26/iron-ed25519-cryptosuite-2020/tree/main</url>
+	</scm>
 
-    <developers>
-        <developer>
-            <id>filip26</id>
-            <name>Filip Kolarik</name>
-            <email>filip26@gmail.com</email>
-            <roles>
-                <role>author</role>
-            </roles>
-        </developer>
-    </developers>
+	<developers>
+		<developer>
+			<id>filip26</id>
+			<name>Filip Kolarik</name>
+			<email>filip26@gmail.com</email>
+			<roles>
+				<role>author</role>
+			</roles>
+		</developer>
+	</developers>
 
-    <inceptionYear>2022</inceptionYear>
+	<inceptionYear>2022</inceptionYear>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <argLine>-Dfile.encoding=UTF-8</argLine>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<argLine>-Dfile.encoding=UTF-8</argLine>
 
-        <iron.version>0.8.1</iron.version>
+		<carbon.version>0.2.0</carbon.version>
+		<copper-base.version>0.4.0</copper-base.version>
+		<copper-codec.version>0.1.1</copper-codec.version>
+		<jakarta.json.version>2.0.1</jakarta.json.version>
 
         <!-- test resources -->
         <junit.version>5.10.2</junit.version>
     </properties>
 
      <dependencies>
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>copper-multicodec</artifactId>
+            <version>${copper-codec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>copper-multibase</artifactId>
+            <version>${copper-base.version}</version>
+        </dependency>       
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>carbon-did</artifactId>
+            <version>${carbon.version}</version>
+        </dependency>        
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+            <version>${jakarta.json.version}</version>
+        </dependency>     
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -183,47 +208,48 @@
         </plugins>
     </build>
 
-    <profiles>
-    <profile>
-      <id>maven-central</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.1.0</version>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.13</version>
-            <extensions>true</extensions>
-            <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-      <distributionManagement>
-        <snapshotRepository>
-          <id>ossrh</id>
-          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-      </distributionManagement>
-    </profile>    
-    </profiles>
+
+	<profiles>
+		<profile>
+			<id>maven-central</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>3.1.0</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.13</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+	</profiles>
 </project>

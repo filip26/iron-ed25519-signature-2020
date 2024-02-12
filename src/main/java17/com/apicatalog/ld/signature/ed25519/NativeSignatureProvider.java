@@ -64,7 +64,7 @@ class NativeSignatureProvider implements SignatureAlgorithm {
     }
 
     @Override
-    public KeyPair keygen(final int length) {
+    public KeyPair keygen() {
         throw new UnsupportedOperationException("Use iron-verifiable-credentials-jre8");
     }
 

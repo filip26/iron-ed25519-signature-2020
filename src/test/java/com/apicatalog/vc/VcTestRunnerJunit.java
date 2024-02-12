@@ -21,16 +21,14 @@ import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
 import com.apicatalog.jsonld.loader.HttpLoader;
 import com.apicatalog.jsonld.loader.SchemeRouter;
 import com.apicatalog.ld.DocumentError;
-import com.apicatalog.ld.schema.LdSchema;
 import com.apicatalog.ld.signature.SigningError;
 import com.apicatalog.ld.signature.VerificationError;
+import com.apicatalog.ld.signature.ed25519.Ed25519ContextLoader;
+import com.apicatalog.ld.signature.ed25519.Ed25519KeyAdapter;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
+import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020Proof;
 import com.apicatalog.ld.signature.key.KeyPair;
-import com.apicatalog.ld.signature.proof.ProofOptions;
-import com.apicatalog.multibase.Multibase.Algorithm;
-import com.apicatalog.multicodec.Multicodec.Codec;
-import com.apicatalog.vc.integrity.DataIntegrity;
-import com.apicatalog.vc.integrity.DataIntegrityKeysAdapter;
+import com.apicatalog.vc.integrity.DataIntegrityVocab;
 import com.apicatalog.vc.processor.Issuer;
 
 import jakarta.json.Json;
@@ -47,10 +45,11 @@ public class VcTestRunnerJunit {
     private final VcTestCase testCase;
 
     public final static DocumentLoader LOADER = new UriBaseRewriter(VcTestCase.BASE, "classpath:",
-            new SchemeRouter()
-                    .set("http", HttpLoader.defaultInstance())
-                    .set("https", HttpLoader.defaultInstance())
-                    .set("classpath", new ClasspathLoader()));
+            new Ed25519ContextLoader(
+                    new SchemeRouter()
+                            .set("http", HttpLoader.defaultInstance())
+                            .set("https", HttpLoader.defaultInstance())
+                            .set("classpath", new ClasspathLoader())));
 
     public VcTestRunnerJunit(VcTestCase testCase) {
         this.testCase = testCase;
@@ -66,7 +65,9 @@ public class VcTestRunnerJunit {
 
                 Vc.verify(testCase.input, new Ed25519Signature2020())
                         .loader(LOADER)
-                        .param(DataIntegrity.DOMAIN.name(), testCase.domain)
+                        .param(DataIntegrityVocab.DOMAIN.name(), testCase.domain)
+                        .param(DataIntegrityVocab.CHALLENGE.name(), testCase.challenge)
+                        .param(DataIntegrityVocab.PURPOSE.name(), testCase.purpose)
                         .isValid();
 
                 assertFalse(isNegative(), "Expected error " + testCase.result);
@@ -82,16 +83,14 @@ public class VcTestRunnerJunit {
                     keyPairLocation = URI.create(VcTestCase.base("issuer/0001-keys.json"));
                 }
 
-                final Ed25519Signature2020 suite = new Ed25519Signature2020();
+                // proof draft
+                final Ed25519Signature2020Proof draft = Ed25519Signature2020.createDraft(
+                        testCase.verificationMethod,
+                        URI.create("https://w3id.org/security#assertionMethod"), // purpose
+                        testCase.created,
+                        testCase.domain);
 
-                final ProofOptions options = suite.createOptions()
-                        // proof options
-                        .verificationMethod(testCase.verificationMethod)
-                        .purpose(URI.create("https://w3id.org/security#assertionMethod"))
-                        .created(testCase.created)
-                        .domain(testCase.domain);
-
-                final Issuer issuer = Vc.sign(testCase.input, getKeys(keyPairLocation, LOADER), options)
+                final Issuer issuer = Vc.sign(testCase.input, getKeys(keyPairLocation, LOADER), draft)
                         .loader(LOADER);
 
                 JsonObject signed = null;
@@ -216,23 +215,7 @@ public class VcTestRunnerJunit {
                 continue;
             }
 
-            LdSchema schema = DataIntegrity.getKeyPair(
-                    Ed25519Signature2020.KEY_PAIR_TYPE,
-                    DataIntegrity.getPublicKey(
-                            Algorithm.Base58Btc,
-                            Codec.Ed25519PublicKey,
-                            k -> k == null || (k.length == 32
-                                && k.length == 57
-                                && k.length == 114
-                            )),
-                    DataIntegrity.getPrivateKey(
-                            Algorithm.Base58Btc,
-                            Codec.Ed25519PrivateKey,
-                            k -> k == null || k.length > 0
-                            )
-            );
-            return (KeyPair) schema.map(new DataIntegrityKeysAdapter()).read(key);
-
+            return (KeyPair) Ed25519KeyAdapter.from(key.asJsonObject());
         }
         throw new IllegalStateException();
     }
