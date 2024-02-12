@@ -1,4 +1,4 @@
-package com.apicatalog.ld.signature.ed25519;
+package com.apicatalog.vc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,10 +23,11 @@ import com.apicatalog.jsonld.loader.SchemeRouter;
 import com.apicatalog.ld.DocumentError;
 import com.apicatalog.ld.signature.SigningError;
 import com.apicatalog.ld.signature.VerificationError;
+import com.apicatalog.ld.signature.ed25519.Ed25519ContextLoader;
+import com.apicatalog.ld.signature.ed25519.Ed25519KeyAdapter;
+import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
+import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020Proof;
 import com.apicatalog.ld.signature.key.KeyPair;
-import com.apicatalog.vc.ClasspathLoader;
-import com.apicatalog.vc.UriBaseRewriter;
-import com.apicatalog.vc.Vc;
 import com.apicatalog.vc.integrity.DataIntegrityVocab;
 import com.apicatalog.vc.processor.Issuer;
 
@@ -215,21 +216,6 @@ public class VcTestRunnerJunit {
             }
 
             return (KeyPair) Ed25519KeyAdapter.from(key.asJsonObject());
-
-//            LdSchema schema = DataIntegritySchema.getKeyPair(
-//                    Ed25519Signature2020.KEY_PAIR_TYPE,
-//                    DataIntegritySchema.getPublicKey(
-//                            Algorithm.Base58Btc,
-//                            Codec.Ed25519PublicKey,
-//                            k -> k == null || (k.length == 32
-//                                    && k.length == 57
-//                                    && k.length == 114)),
-//                    DataIntegritySchema.getPrivateKey(
-//                            Algorithm.Base58Btc,
-//                            Codec.Ed25519PrivateKey,
-//                            k -> k == null || k.length > 0));
-//            return (KeyPair) schema.map(new DataIntegrityKeysAdapter()).read(key);
-
         }
         throw new IllegalStateException();
     }

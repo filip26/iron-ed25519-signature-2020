@@ -19,7 +19,7 @@ import com.apicatalog.vc.method.MethodAdapter;
 
 import jakarta.json.JsonObject;
 
-class Ed25519KeyAdapter implements MethodAdapter {
+public class Ed25519KeyAdapter implements MethodAdapter {
 
     public static final URI VERIFICATION_KEY_TYPE_URI = URI.create(VcVocab.SECURITY_VOCAB + "Ed25519VerificationKey2020");
 
@@ -35,7 +35,7 @@ class Ed25519KeyAdapter implements MethodAdapter {
         return from(document);
     }
 
-    protected static VerificationMethod from(JsonObject document) throws DocumentError {
+    public static VerificationMethod from(JsonObject document) throws DocumentError {
         if (document == null) {
             throw new IllegalArgumentException("Verification method cannot be null.");
         }

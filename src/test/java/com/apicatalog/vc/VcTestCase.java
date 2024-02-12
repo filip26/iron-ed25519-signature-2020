@@ -1,4 +1,4 @@
-package com.apicatalog.ld.signature.ed25519;
+package com.apicatalog.vc;
 
 import java.net.URI;
 import java.time.Instant;
@@ -10,6 +10,7 @@ import com.apicatalog.jsonld.lang.Keywords;
 import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.ld.DocumentError;
 import com.apicatalog.ld.signature.VerificationMethod;
+import com.apicatalog.ld.signature.ed25519.Ed25519KeyAdapter;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
