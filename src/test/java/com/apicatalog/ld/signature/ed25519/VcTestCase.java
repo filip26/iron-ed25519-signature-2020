@@ -104,9 +104,6 @@ public class VcTestCase {
 
                 try {
                     testCase.verificationMethod = Ed25519KeyAdapter.from(method);
-                    System.out.println("!! " + method);
-                    System.out.println("!! " + testCase.verificationMethod.type());
-                    System.out.println("!! " + testCase.verificationMethod);
                 } catch (DocumentError e) {
                     throw new IllegalStateException(e);
                 }

@@ -48,7 +48,7 @@ class Ed25519KeyAdapter implements MethodAdapter {
         if (document == null) {
             throw new IllegalArgumentException("Verification method cannot be null.");
         }
-        System.out.println("X >>> " + document);
+
         final LdNode node = LdNode.of(document);
 
         final URI id = node.id();
@@ -60,20 +60,19 @@ class Ed25519KeyAdapter implements MethodAdapter {
         byte[] privateKey = null;
 
         if (node.type().hasType(KEY_PAIR_TYPE_URI.toString())) {
-            System.out.println("1");
+
             type = KEY_PAIR_TYPE_URI;
 
             publicKey = getKey(node, PUBLIC_KEY, KeyCodec.ED25519_PUBLIC_KEY);
             privateKey = getKey(node, PRIVATE_KEY, KeyCodec.ED25519_PRIVATE_KEY);
 
         } else if (node.type().hasType(VERIFICATION_KEY_TYPE_URI.toString())) {
-            System.out.println("2");
+
             type = VERIFICATION_KEY_TYPE_URI;
 
             publicKey = getKey(node, PUBLIC_KEY, KeyCodec.ED25519_PUBLIC_KEY);
 
         } else if (node.type().exists()) {
-            System.out.println(">>> " + node.type().string());
             throw new DocumentError(ErrorType.Invalid, "VerificationMethodType");
         }
 
@@ -127,7 +126,7 @@ class Ed25519KeyAdapter implements MethodAdapter {
 
         if (value instanceof VerificationKey) {
             VerificationKey verificationKey = (VerificationKey) value;
-            System.out.println("1 XXXXX >>>> " + verificationKey.publicKey());
+
             if (verificationKey.publicKey() != null) {
                 builder.set(PUBLIC_KEY)
                         .scalar("https://w3id.org/security#multibase",
@@ -141,7 +140,7 @@ class Ed25519KeyAdapter implements MethodAdapter {
 
         if (value instanceof KeyPair) {
             KeyPair keyPair = (KeyPair) value;
-            System.out.println("2 XXXXX >>>> " + keyPair.privateKey());
+
             if (keyPair.privateKey() != null) {
                 builder.set(PRIVATE_KEY)
                         .scalar("https://w3id.org/security#multibase",
