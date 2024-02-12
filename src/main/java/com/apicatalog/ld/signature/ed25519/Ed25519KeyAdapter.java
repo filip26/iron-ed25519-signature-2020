@@ -68,10 +68,10 @@ class Ed25519KeyAdapter implements MethodAdapter {
         }
 
         // validate public key
-        if (publicKey != null && (publicKey.length != 32
+        if (publicKey != null && publicKey.length != 32
                 && publicKey.length != 57
-                && publicKey.length != 114)) {
-            throw new DocumentError(ErrorType.Invalid, "PublicKeySize");
+                && publicKey.length != 114) {
+            throw new DocumentError(ErrorType.Invalid, "PublicKeyLength");
         }
 
         return new Ed25519KeyPair2020(

@@ -24,10 +24,6 @@ public final class Ed25519Signature2020 implements SignatureSuite {
 
     protected static final MethodAdapter METHOD_ADAPTER = new Ed25519KeyAdapter();
 
-    protected Ed25519Signature2020() {
-        /* protected */
-    }
-
     @Override
     public Proof readProof(JsonObject document) throws DocumentError {
         if (document == null) {

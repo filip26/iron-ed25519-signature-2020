@@ -45,10 +45,10 @@ public class VcTestRunnerJunit {
 
     public final static DocumentLoader LOADER = new UriBaseRewriter(VcTestCase.BASE, "classpath:",
             new Ed25519ContextLoader(
-            new SchemeRouter()
-                    .set("http", HttpLoader.defaultInstance())
-                    .set("https", HttpLoader.defaultInstance())
-                    .set("classpath", new ClasspathLoader())));
+                    new SchemeRouter()
+                            .set("http", HttpLoader.defaultInstance())
+                            .set("https", HttpLoader.defaultInstance())
+                            .set("classpath", new ClasspathLoader())));
 
     public VcTestRunnerJunit(VcTestCase testCase) {
         this.testCase = testCase;
@@ -66,7 +66,7 @@ public class VcTestRunnerJunit {
                         .loader(LOADER)
                         .param(DataIntegrityVocab.DOMAIN.name(), testCase.domain)
                         .param(DataIntegrityVocab.CHALLENGE.name(), testCase.challenge)
-                        .param(DataIntegrityVocab.PURPOSE.name(), testCase.purpose)                        
+                        .param(DataIntegrityVocab.PURPOSE.name(), testCase.purpose)
                         .isValid();
 
                 assertFalse(isNegative(), "Expected error " + testCase.result);
@@ -213,7 +213,7 @@ public class VcTestRunnerJunit {
             if (JsonUtils.isNotObject(key)) {
                 continue;
             }
-            
+
             return (KeyPair) Ed25519KeyAdapter.from(key.asJsonObject());
 
 //            LdSchema schema = DataIntegritySchema.getKeyPair(
