@@ -48,7 +48,7 @@ public final class Ed25519Signature2020Provider implements SignatureAlgorithm {
     }
 
     @Override
-    public KeyPair keygen(int length) throws KeyGenError {
+    public KeyPair keygen() throws KeyGenError {
 
         try {
             final Ed25519Sign.KeyPair kp = Ed25519Sign.KeyPair.newKeyPair();
