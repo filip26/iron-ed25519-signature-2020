@@ -56,7 +56,7 @@ public final class Ed25519Signature2020Provider implements SignatureAlgorithm {
             return new Ed25519KeyPair2020(
                             null,
                             null,
-                            URI.create(Ed25519Signature2020.KEY_PAIR_TYPE.uri()),
+                            Ed25519KeyAdapter.KEY_PAIR_TYPE_URI,
                             kp.getPublicKey(),
                             kp.getPrivateKey()
                         );
