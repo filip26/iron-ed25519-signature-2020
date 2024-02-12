@@ -23,4 +23,9 @@ public final class Ed25519KeyPair2020 extends Ed25519VerificationKey2020 impleme
     public byte[] privateKey() {
         return privateKey;
     }
+
+    @Override
+    public String algorithm() {
+        return "ED25519";
+    }    
 }
