@@ -28,15 +28,6 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
             new MessageDigest("SHA-256"),
             new Ed25519Signature2020Provider());
 
-//    static final LdProperty<byte[]> PROOF_VALUE_PROPERTY = DataIntegritySchema.getProofValue(
-//            Algorithm.Base58Btc,
-//            key -> key.length == 64);
-//
-//    static final LdSchema PROOF_SCHEMA = DataIntegritySchema.getProof(
-//            LdTerm.create("Ed25519Signature2020", VcVocab.SECURITY_VOCAB),
-//            DataIntegritySchema.getEmbeddedMethod(MethodProcessor.METHOD_SCHEMA),
-//            PROOF_VALUE_PROPERTY);
-
     protected URI id;
     protected URI purpose;
     protected VerificationMethod method;
@@ -156,7 +147,7 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
 
     @Override
     public JsonObject write(VerificationMethod value) {
-        throw new UnsupportedOperationException();
+        return Ed25519Signature2020.METHOD_ADAPTER.write(value);
     }
 
     @Override
@@ -171,15 +162,19 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
         }
         if (method == null) {
             throw new DocumentError(ErrorType.Missing, "VerificationMethod");
-        }
+        }        
         if (purpose == null) {
             throw new DocumentError(ErrorType.Missing, "ProofPurpose");
         }
         if (value == null || value.length == 0) {
             throw new DocumentError(ErrorType.Missing, "ProofValue");
         }
+        // proof value must be 64 bytes
+        if (value.length != 64) {
+            throw new DocumentError(ErrorType.Invalid, "ProofValue");
+        }
 
-        assertEquals(params, DataIntegrityVocab.PURPOSE, purpose.toString()); // FIXME compare as URI, expect URI in params
+        assertEquals(params, DataIntegrityVocab.PURPOSE, purpose.toString()); //TODO compare as URI, expect URI in params
         assertEquals(params, DataIntegrityVocab.CHALLENGE, challenge);
         assertEquals(params, DataIntegrityVocab.DOMAIN, domain);
     }

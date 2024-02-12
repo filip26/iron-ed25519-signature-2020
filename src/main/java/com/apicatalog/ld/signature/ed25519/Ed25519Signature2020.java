@@ -18,17 +18,11 @@ import jakarta.json.JsonObject;
 
 public final class Ed25519Signature2020 implements SignatureSuite {
 
-    static final String ID = VcVocab.SECURITY_VOCAB + "Ed25519Signature2020";
-
-//    public static final Term VERIFICATION_KEY_TYPE = Term.create("Ed25519VerificationKey2020", VcVocab.SECURITY_VOCAB);
-
-//    public static final Term KEY_PAIR_TYPE = Term.create("Ed25519KeyPair2020", VcVocab.SECURITY_VOCAB);
+    public static final String ID = VcVocab.SECURITY_VOCAB + "Ed25519Signature2020";
 
     public static final String CONTEXT = "https://w3id.org/security/suites/ed25519-2020/v1";
 
     protected static final MethodAdapter METHOD_ADAPTER = new Ed25519KeyAdapter();
-
-//    protected static final MulticodecDecoder CODECS = MulticodecDecoder.getInstance(KeyCodec.ED25519_PUBLIC_KEY, KeyCodec.ED25519_PRIVATE_KEY);
 
     protected Ed25519Signature2020() {
         /* protected */
@@ -42,7 +36,7 @@ public final class Ed25519Signature2020 implements SignatureSuite {
 
         final LdNode node = LdNode.of(document);
 
-        Ed25519Signature2020Proof proof = new Ed25519Signature2020Proof(document);
+        final Ed25519Signature2020Proof proof = new Ed25519Signature2020Proof(document);
 
         proof.id = node.id();
 

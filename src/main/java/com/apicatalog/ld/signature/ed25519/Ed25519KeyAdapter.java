@@ -25,15 +25,6 @@ class Ed25519KeyAdapter implements MethodAdapter {
 
     public static final URI KEY_PAIR_TYPE_URI = URI.create(VcVocab.SECURITY_VOCAB + "Ed25519KeyPair2020");
 
-//    static final LdSchema METHOD_SCHEMA = DataIntegritySchema.getVerificationKey(
-//            VERIFICATION_KEY_TYPE,
-//            DataIntegritySchema.getPublicKey(
-//                    Algorithm.Base58Btc,
-//                    Codec.Ed25519PublicKey,
-//                    key -> key == null || (key.length == 32
-//                            || key.length == 57
-//                            || key.length == 114)));
-
     public static final Term CONTROLLER = Term.create("controller", VcVocab.SECURITY_VOCAB);
 
     public static final Term PUBLIC_KEY = Term.create("publicKeyMultibase", VcVocab.SECURITY_VOCAB);
@@ -74,6 +65,13 @@ class Ed25519KeyAdapter implements MethodAdapter {
 
         } else if (node.type().exists()) {
             throw new DocumentError(ErrorType.Invalid, "VerificationMethodType");
+        }
+
+        // validate public key
+        if (publicKey != null && (publicKey.length != 32
+                && publicKey.length != 57
+                && publicKey.length != 114)) {
+            throw new DocumentError(ErrorType.Invalid, "PublicKeySize");
         }
 
         return new Ed25519KeyPair2020(
