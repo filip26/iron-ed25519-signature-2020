@@ -52,7 +52,7 @@ public class Ed25519ContextLoader implements DocumentLoader {
             return JsonDocument.of(is);
 
         } catch (IOException | JsonLdError e) {
-            e.printStackTrace();
+            /* ignore */
         }
         return null;
     }
