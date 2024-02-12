@@ -131,4 +131,3 @@ Fork and clone the project repository.
 
 ## Commercial Support
 Commercial support is available at filip26@gmail.com
-.
