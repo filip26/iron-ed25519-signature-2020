@@ -12,15 +12,20 @@ import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
+import com.apicatalog.jsonld.loader.SchemeRouter;
 import com.apicatalog.vc.Vc;
 
-public class StaticContextLoader implements DocumentLoader {
+public class Ed25519ContextLoader implements DocumentLoader {
 
     protected static final Map<String, Document> staticCache = defaultValues();
 
     protected final DocumentLoader defaultLoader;
 
-    public StaticContextLoader(final DocumentLoader defaultLoader) {
+    public Ed25519ContextLoader() {
+        this.defaultLoader = SchemeRouter.defaultInstance();
+    }
+    
+    public Ed25519ContextLoader(final DocumentLoader defaultLoader) {
         this.defaultLoader = defaultLoader;
     }
 
@@ -38,17 +43,8 @@ public class StaticContextLoader implements DocumentLoader {
     }
 
     public static Map<String, Document> defaultValues() {
-
         Map<String, Document> staticCache = new LinkedHashMap<>();
-
-        staticCache.put("https://www.w3.org/2018/credentials/examples/v1", get("2018-credentials-examples-v1.jsonld"));
-        staticCache.put("https://www.w3.org/2018/credentials/v1", get("2018-credentials-v1.jsonld"));
-        staticCache.put("https://www.w3.org/ns/credentials/v2", get("2023-credentials-v2.jsonld"));
-        staticCache.put("https://www.w3.org/ns/odrl.jsonld", get("odrl.jsonld"));
-        staticCache.put("https://www.w3.org/ns/did/v1", get("did-v1.jsonld"));
-        staticCache.put("https://w3id.org/security/data-integrity/v1", get("data-integrity-v1.jsonld"));
-        staticCache.put("https://w3id.org/security/multikey/v1", get("multikey-v1.jsonld"));
-
+        staticCache.put(Ed25519Signature2020.CONTEXT, get("security-suites-ed25519-2020-v1.jsonld"));
         return Collections.unmodifiableMap(staticCache);
     }
 
