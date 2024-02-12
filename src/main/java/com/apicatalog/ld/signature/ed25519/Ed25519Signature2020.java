@@ -8,8 +8,6 @@ import com.apicatalog.ld.node.LdNode;
 import com.apicatalog.ld.node.LdNodeBuilder;
 import com.apicatalog.ld.signature.VerificationMethod;
 import com.apicatalog.multibase.Multibase;
-import com.apicatalog.multicodec.MulticodecDecoder;
-import com.apicatalog.multicodec.codec.KeyCodec;
 import com.apicatalog.vc.VcVocab;
 import com.apicatalog.vc.integrity.DataIntegrityVocab;
 import com.apicatalog.vc.method.MethodAdapter;
@@ -26,11 +24,11 @@ public final class Ed25519Signature2020 implements SignatureSuite {
 
 //    public static final Term KEY_PAIR_TYPE = Term.create("Ed25519KeyPair2020", VcVocab.SECURITY_VOCAB);
 
-    static final URI CONTEXT = URI.create("https://w3id.org/security/suites/ed25519-2020/v1");
+    public static final String CONTEXT = "https://w3id.org/security/suites/ed25519-2020/v1";
 
     protected static final MethodAdapter METHOD_ADAPTER = new Ed25519KeyAdapter();
     
-    protected static final MulticodecDecoder CODECS = MulticodecDecoder.getInstance(KeyCodec.ED25519_PUBLIC_KEY, KeyCodec.ED25519_PRIVATE_KEY);
+//    protected static final MulticodecDecoder CODECS = MulticodecDecoder.getInstance(KeyCodec.ED25519_PUBLIC_KEY, KeyCodec.ED25519_PRIVATE_KEY);
 
     protected Ed25519Signature2020() {
         /* protected */

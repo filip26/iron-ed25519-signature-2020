@@ -37,7 +37,7 @@ class Ed25519KeyAdapter implements MethodAdapter {
     public static final Term CONTROLLER = Term.create("controller", VcVocab.SECURITY_VOCAB);
 
     public static final Term PUBLIC_KEY = Term.create("publicKeyMultibase", VcVocab.SECURITY_VOCAB);
-    public static final Term PRIVATE_KEY = Term.create("secretKeyMultibase", VcVocab.SECURITY_VOCAB);
+    public static final Term PRIVATE_KEY = Term.create("privateKeyMultibase", VcVocab.SECURITY_VOCAB);
 
     @Override
     public VerificationMethod read(JsonObject document) throws DocumentError {
@@ -59,24 +59,25 @@ class Ed25519KeyAdapter implements MethodAdapter {
         byte[] publicKey = null;
         byte[] privateKey = null;
         System.out.println(document);
-System.out.println(">>> " + node.type().strings());
+System.out.println("X >>> " + node.type().strings());
         if (node.type().hasType(KEY_PAIR_TYPE_URI.toString())) {
-
+            System.out.println("1");
             type = KEY_PAIR_TYPE_URI;
 
-            publicKey = getKey(node, PUBLIC_KEY);
-            privateKey = getKey(node, PRIVATE_KEY);
+            publicKey = getKey(node, PUBLIC_KEY, KeyCodec.ED25519_PUBLIC_KEY);
+            privateKey = getKey(node, PRIVATE_KEY, KeyCodec.ED25519_PRIVATE_KEY);
 
         } else if (node.type().hasType(VERIFICATION_KEY_TYPE_URI.toString())) {
-
+            System.out.println("2");
             type = VERIFICATION_KEY_TYPE_URI;
 
-            publicKey = getKey(node, PUBLIC_KEY);
+            publicKey = getKey(node, PUBLIC_KEY, KeyCodec.ED25519_PUBLIC_KEY);
 
         } else if (node.type().exists()) {
             throw new DocumentError(ErrorType.Invalid, "VerificationMethodType");
         }
-
+        System.out.println("PUB " + publicKey);
+        System.out.println("PRIV " + privateKey);
         return new Ed25519KeyPair2020(
                 id,
                 controller,
@@ -84,7 +85,7 @@ System.out.println(">>> " + node.type().strings());
                 privateKey,
                 publicKey);
     }
-    protected static final byte[] getKey(final LdNode node, final Term term) throws DocumentError {
+    protected static final byte[] getKey(final LdNode node, final Term term, final Multicodec codec) throws DocumentError {
 
         final LdScalar key = node.scalar(term);
 
@@ -101,8 +102,6 @@ System.out.println(">>> " + node.type().strings());
             }
 
             final byte[] decodedKey = Multibase.BASE_58_BTC.decode(encodedKey);
-
-            final Multicodec codec = Ed25519Signature2020.CODECS.getCodec(decodedKey).orElseThrow(() -> new DocumentError(ErrorType.Invalid, term.name() + "Codec"));
 
             return codec.decode(decodedKey);
         }

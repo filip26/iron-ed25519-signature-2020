@@ -133,21 +133,11 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
     public JsonObject setProofValue(JsonObject expanded, byte[] proofValue) throws DocumentError {
         LdNodeBuilder node = new LdNodeBuilder(Json.createObjectBuilder(expanded));
 
-        node.set(DataIntegrityVocab.PROOF_VALUE)
-                .scalar("https://w3id.org/security#multibase",
-                        Multibase.BASE_58_BTC.encode(proofValue));
+        node.set(DataIntegrityVocab.PROOF_VALUE).multibase(
+                Multibase.BASE_58_BTC, proofValue);
 
         return node.build();
     }
-
-//    public static final Ed25519Signature2020Proof read(SignatureSuite suite, JsonObject expanded) throws DocumentError {
-//        final LdObject ldProof = PROOF_SCHEMA.read(expanded);
-//        return new Ed25519Signature2020Proof(
-//                        CRYPTO,
-//                        new MethodProcessor(suite),
-//                        ldProof, 
-//                        expanded);
-//    }
 
     @Override
     public ProofValueProcessor valueProcessor() {
@@ -156,7 +146,7 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
 
     @Override
     public String getContext() {
-        return "https://w3id.org/security/suites/ed25519-2020/v1";
+        return Ed25519Signature2020.CONTEXT;
     }
 
     @Override
@@ -188,12 +178,12 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
         if (value == null || value.length == 0) {
             throw new DocumentError(ErrorType.Missing, "ProofValue");
         }
-        
-        assertEquals(params, DataIntegrityVocab.PURPOSE, purpose.toString());   //FIXME compare as URI, expect URI in params
+
+        assertEquals(params, DataIntegrityVocab.PURPOSE, purpose.toString()); // FIXME compare as URI, expect URI in params
         assertEquals(params, DataIntegrityVocab.CHALLENGE, challenge);
         assertEquals(params, DataIntegrityVocab.DOMAIN, domain);
     }
-    
+
     protected static void assertEquals(Map<String, Object> params, Term name, String param) throws DocumentError {
 
         final Object value = params.get(name.name());
@@ -204,6 +194,6 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
 
         if (!value.equals(param)) {
             throw new DocumentError(ErrorType.Invalid, name);
-        }        
-    }        
+        }
+    }
 }
