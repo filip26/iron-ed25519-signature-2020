@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.apicatalog</groupId>
 		<artifactId>ed25519</artifactId>
-		<version>0.10.0-SNAPSHOT</version>
+		<version>0.10.0</version>
 		<relativePath>pom_parent.xml</relativePath>
 	</parent>
 
@@ -31,7 +31,7 @@
 		<envSources>src/main/java8</envSources>
 		<tink.version>1.6.1</tink.version>
 		<rdf-urdna.version>1.2</rdf-urdna.version>
-		<iron.version>0.10.0-SNAPSHOT</iron.version>
+		<iron.version>0.10.0</iron.version>
 	</properties>
 
 	<dependencies>
