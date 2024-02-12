@@ -1,6 +1,6 @@
 # Iron Ed25519 Signature Suite 2020
 
-An implementation of the [EdDSA Cryptosuite 2020](https://w3c-ccg.github.io/di-eddsa-2020/) in Java.
+An implementation of the [EdDSA Cryptosuite 2020](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite) in Java.
 
 [![Java 17 CI](https://github.com/filip26/iron-ed25519-cryptosuite-2020/actions/workflows/java17-build.yml/badge.svg)](https://github.com/filip26/iron-ed25519-cryptosuite-2020/actions/workflows/java17-build.yml)
 [![Android (Java 8) CI](https://github.com/filip26/iron-ed25519-cryptosuite-2020/actions/workflows/java8-build.yml/badge.svg)](https://github.com/filip26/iron-ed25519-cryptosuite-2020/actions/workflows/java8-build.yml)
@@ -11,7 +11,7 @@ An implementation of the [EdDSA Cryptosuite 2020](https://w3c-ccg.github.io/di-e
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Features
-* [Ed25519Signature2020](https://w3c-ccg.github.io/di-eddsa-2020/#ed25519signature2020)
+* [Ed25519Signature2020](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite)
   * Verifying VC/VP
   * Issuing VC/VP
 * [VC HTTP API & Service](https://github.com/filip26/iron-vc-api)
@@ -119,8 +119,7 @@ Fork and clone the project repository.
 ```
 
 ## Resources
-* [EdDSA Cryptosuite 2020](https://w3c-ccg.github.io/di-eddsa-2020/)
-* [Interoperability Report](https://w3c-ccg.github.io/di-ed25519signature2020-test-suite/)
+* [EdDSA Cryptosuite 2020](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite)
 * [Iron Verifiable Credentials](https://github.com/filip26/iron-verifiable-credentials)
 
 ## Sponsors
