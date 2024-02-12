@@ -161,7 +161,7 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
 
     @Override
     public VerificationMethod read(JsonObject document) throws DocumentError {
-        return Ed25519Signature2020.METHOD_ADAPTER.read(expanded);
+        return Ed25519Signature2020.METHOD_ADAPTER.read(document);
     }
 
     @Override

@@ -27,14 +27,13 @@ public final class Ed25519Signature2020 implements SignatureSuite {
     public static final String CONTEXT = "https://w3id.org/security/suites/ed25519-2020/v1";
 
     protected static final MethodAdapter METHOD_ADAPTER = new Ed25519KeyAdapter();
-    
+
 //    protected static final MulticodecDecoder CODECS = MulticodecDecoder.getInstance(KeyCodec.ED25519_PUBLIC_KEY, KeyCodec.ED25519_PRIVATE_KEY);
 
     protected Ed25519Signature2020() {
         /* protected */
     }
 
-    
     @Override
     public Proof readProof(JsonObject document) throws DocumentError {
         if (document == null) {
@@ -60,7 +59,7 @@ public final class Ed25519Signature2020 implements SignatureSuite {
         proof.value = node.scalar(DataIntegrityVocab.PROOF_VALUE).multibase(Multibase.BASE_58_BTC);
 
         proof.previousProof = node.node(DataIntegrityVocab.PREVIOUS_PROOF).id();
-        
+
         return proof;
     }
 
@@ -76,7 +75,7 @@ public final class Ed25519Signature2020 implements SignatureSuite {
             String domain) throws DocumentError {
         return createDraft(method, purpose, created, domain, null);
     }
-    
+
     public static Ed25519Signature2020Proof createDraft(
             VerificationMethod method,
             URI purpose,
@@ -104,7 +103,7 @@ public final class Ed25519Signature2020 implements SignatureSuite {
         proof.method = method;
         proof.domain = domain;
         proof.challenge = challenge;
-        
+
         return proof;
     }
 }
