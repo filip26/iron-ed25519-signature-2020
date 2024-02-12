@@ -44,10 +44,11 @@ public class VcTestRunnerJunit {
     private final VcTestCase testCase;
 
     public final static DocumentLoader LOADER = new UriBaseRewriter(VcTestCase.BASE, "classpath:",
+            new Ed25519ContextLoader(
             new SchemeRouter()
                     .set("http", HttpLoader.defaultInstance())
                     .set("https", HttpLoader.defaultInstance())
-                    .set("classpath", new ClasspathLoader()));
+                    .set("classpath", new ClasspathLoader())));
 
     public VcTestRunnerJunit(VcTestCase testCase) {
         this.testCase = testCase;

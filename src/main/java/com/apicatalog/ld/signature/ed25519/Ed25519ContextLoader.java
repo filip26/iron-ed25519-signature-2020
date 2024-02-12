@@ -31,7 +31,6 @@ public class Ed25519ContextLoader implements DocumentLoader {
 
     @Override
     public Document loadDocument(final URI url, final DocumentLoaderOptions options) throws JsonLdError {
-
         if (staticCache.containsKey(url.toString())) {
             final Document document = staticCache.get(url.toString());
             if (document != null) {
