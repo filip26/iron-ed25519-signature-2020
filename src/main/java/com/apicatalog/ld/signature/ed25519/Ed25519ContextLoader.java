@@ -13,7 +13,6 @@ import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
 import com.apicatalog.jsonld.loader.SchemeRouter;
-import com.apicatalog.vc.Vc;
 
 public class Ed25519ContextLoader implements DocumentLoader {
 
@@ -48,7 +47,7 @@ public class Ed25519ContextLoader implements DocumentLoader {
     }
 
     protected static JsonDocument get(final String name) {
-        try (final InputStream is = Vc.class.getResourceAsStream(name)) {
+        try (final InputStream is = Ed25519ContextLoader.class.getResourceAsStream(name)) {
             return JsonDocument.of(is);
 
         } catch (IOException | JsonLdError e) {
