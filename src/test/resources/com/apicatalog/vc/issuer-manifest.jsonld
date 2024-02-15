@@ -112,6 +112,22 @@
 				"verificationMethod": "verifier/0005-verification-key.json",
 				"created": "2022-06-09T21:49:41Z"
 			}
-		}
+		},
+        {
+            "@id": "#t0007",
+            "@type": [
+                "PositiveEvaluationTest",
+                "IssuerTest"
+            ],
+            "name": "W3C Test Vector",
+            "input": "issuer/0007-in.jsonld",
+            "expect": "issuer/0007-out.jsonld",
+            "context": "issuer/0007-context.jsonld",
+            "options": {
+                "keyPair": "issuer/0007-keys.json",
+                "verificationMethod": "https://vc.example/issuers/5678#z6MkrJVnaZkeFzdQyMZu1cgjg7k1pZZ6pvBQ7XJPt4swbTQ2",
+                "created": "2023-02-24T23:36:38Z"
+            }
+        }		
 	]
 }
