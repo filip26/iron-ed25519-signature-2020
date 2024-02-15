@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.apicatalog</groupId>
         <artifactId>ed25519</artifactId>
-        <version>0.10.0</version>
+        <version>0.11.0</version>
         <relativePath>pom_parent.xml</relativePath>
     </parent>
 
@@ -31,7 +31,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <envSources>src/main/java17</envSources>
-        <iron.version>0.10.0</iron.version>
+        <iron.version>0.11.0-SNAPSHOT</iron.version>
     </properties>
 
     <dependencies>
