@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.apicatalog</groupId>
 	<artifactId>ed25519</artifactId>
-	<version>0.11.0</version>
+	<version>0.11.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Iron Ed25519 Signature Suite 2020</name>
@@ -52,161 +52,162 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<argLine>-Dfile.encoding=UTF-8</argLine>
 
+        <iron.version>0.12.0-SNAPSHOT</iron.version>
 		<carbon.version>0.3.0</carbon.version>
 		<copper-base.version>0.5.0</copper-base.version>
 		<copper-codec.version>0.1.1</copper-codec.version>
 		<jakarta.json.version>2.0.1</jakarta.json.version>
 
-        <!-- test resources -->
-        <junit.version>5.10.2</junit.version>
-    </properties>
+		<!-- test resources -->
+		<junit.version>5.10.2</junit.version>
+	</properties>
 
-     <dependencies>
-        <dependency>
-            <groupId>com.apicatalog</groupId>
-            <artifactId>copper-multicodec</artifactId>
-            <version>${copper-codec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.apicatalog</groupId>
-            <artifactId>copper-multibase</artifactId>
-            <version>${copper-base.version}</version>
-        </dependency>       
-        <dependency>
-            <groupId>com.apicatalog</groupId>
-            <artifactId>carbon-did</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>        
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.json</artifactId>
-            <version>${jakarta.json.version}</version>
-        </dependency>     
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.5.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${envSources}</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.6.3</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <description>Iron Ed25519 Signature Suite 2020 Documentation</description>
-                    <doctitle>Iron Ed25519 Signature Suite 2020 Documentation</doctitle>
-                    <header>
+	<dependencies>
+		<dependency>
+			<groupId>com.apicatalog</groupId>
+			<artifactId>copper-multicodec</artifactId>
+			<version>${copper-codec.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.apicatalog</groupId>
+			<artifactId>copper-multibase</artifactId>
+			<version>${copper-base.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.apicatalog</groupId>
+			<artifactId>carbon-did</artifactId>
+			<version>${carbon.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>jakarta.json</artifactId>
+			<version>${jakarta.json.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.3.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.5.0</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${envSources}</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.6.3</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<description>Iron Ed25519 Signature Suite 2020 Documentation</description>
+					<doctitle>Iron Ed25519 Signature Suite 2020 Documentation</doctitle>
+					<header>
                         <![CDATA[<br>Iron Ed25519 Signature Suite 2020 v${project.version}]]>
-                    </header>
-                    <failOnWarnings>false</failOnWarnings>
-                <additionalOptions>
-                    <additionalOption>-Xdoclint:none</additionalOption>
-                </additionalOptions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.11</version>
-                <executions>
-                    <execution>
-                        <id>default-prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.2.5</version>
-            </plugin>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>flatten-maven-plugin</artifactId>
-              <version>1.6.0</version>
-              <configuration>
-                <flattenMode>oss</flattenMode>
-              </configuration>
-              <executions>
-                <!-- enable flattening -->
-                <execution>
-                  <id>flatten</id>
-                  <phase>process-resources</phase>
-                  <goals>
-                    <goal>flatten</goal>
-                  </goals>
-                </execution>
-                <!-- ensure proper cleanup -->
-                <execution>
-                  <id>flatten.clean</id>
-                  <phase>clean</phase>
-                  <goals>
-                    <goal>clean</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-        </plugins>
-    </build>
+					</header>
+					<failOnWarnings>false</failOnWarnings>
+					<additionalOptions>
+						<additionalOption>-Xdoclint:none</additionalOption>
+					</additionalOptions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.11</version>
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.2.5</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<configuration>
+					<flattenMode>oss</flattenMode>
+				</configuration>
+				<executions>
+					<!-- enable flattening -->
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<!-- ensure proper cleanup -->
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 
 	<profiles>

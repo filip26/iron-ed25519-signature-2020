@@ -2,11 +2,13 @@ package com.apicatalog.ld.signature.ed25519;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 import com.apicatalog.ld.DocumentError;
-import com.apicatalog.ld.Term;
 import com.apicatalog.ld.DocumentError.ErrorType;
+import com.apicatalog.ld.Term;
 import com.apicatalog.ld.node.LdNodeBuilder;
 import com.apicatalog.ld.signature.CryptoSuite;
 import com.apicatalog.ld.signature.VerificationMethod;
@@ -15,6 +17,7 @@ import com.apicatalog.ld.signature.primitive.Urdna2015;
 import com.apicatalog.multibase.Multibase;
 import com.apicatalog.vc.integrity.DataIntegrityVocab;
 import com.apicatalog.vc.method.MethodAdapter;
+import com.apicatalog.vc.model.ModelVersion;
 import com.apicatalog.vc.model.Proof;
 import com.apicatalog.vc.model.ProofValueProcessor;
 
@@ -28,6 +31,8 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
             new MessageDigest("SHA-256"),
             new Ed25519Signature2020Provider());
 
+    static final Collection<String> CONTEXTS = Arrays.asList(Ed25519Signature2020.CONTEXT);
+    
     protected URI id;
     protected URI purpose;
     protected VerificationMethod method;
@@ -136,8 +141,8 @@ public final class Ed25519Signature2020Proof implements Proof, ProofValueProcess
     }
 
     @Override
-    public String getContext() {
-        return Ed25519Signature2020.CONTEXT;
+    public Collection<String> getContext(ModelVersion model) {
+        return CONTEXTS;
     }
 
     @Override

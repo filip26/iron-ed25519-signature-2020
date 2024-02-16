@@ -21,22 +21,6 @@
 			"options": {
 				"keyPair": "issuer/0001-keys.json",
 				"verificationMethod": "verifier/0005-verification-key.json",
-				"created": "2022-05-28T17:02:05Z"
-			}
-		},
-		{
-			"@id": "#t0002",
-			"@type": [
-				"PositiveEvaluationTest",
-				"IssuerTest"
-			],
-			"name": "compacted signed credential",
-			"input": "issuer/0002-in.jsonld",
-			"expect": "issuer/0002-out.jsonld",
-			"context": "issuer/0001-context.jsonld",
-			"options": {
-				"keyPair": "issuer/0001-keys.json",
-				"verificationMethod": "verifier/0005-verification-key.json",
 				"created": "2022-06-04T20:33:01Z"
 			}
 		},
@@ -49,7 +33,6 @@
 			"name": "signed embedded verificationMethod",
 			"input": "issuer/0003-in.jsonld",
 			"expect": "issuer/0003-out.jsonld",
-			"context": "issuer/0001-context.jsonld",
 			"options": {
 				"keyPair": "issuer/0001-keys.json",
 				"verificationMethod": {
@@ -70,7 +53,6 @@
 			"name": "a credential with DID key as a verification method",
 			"input": "issuer/0004-in.jsonld",
 			"expect": "issuer/0004-out.jsonld",
-			"context": "issuer/0001-context.jsonld",
 			"options": {
 				"keyPair": "issuer/0001-keys.json",
 				"verificationMethod": "did:key:z6Mkska8oQD7QQQWxqa7L5ai4mH98HfAdSwomPFYKuqNyE2y#z6Mkska8oQD7QQQWxqa7L5ai4mH98HfAdSwomPFYKuqNyE2y",
@@ -86,7 +68,6 @@
 			"name": "proof set, co-sign",
 			"input": "issuer/0005-in.jsonld",
 			"expect": "issuer/0005-out.jsonld",
-			"context": "issuer/0001-context.jsonld",
 			"options": {
 				"keyPair": "issuer/0001-keys.json",
 				"verificationMethod": {
@@ -106,7 +87,6 @@
 			"name": "compacted signed presentation",
 			"input": "issuer/0006-in.jsonld",
 			"expect": "issuer/0006-out.jsonld",
-			"context": "issuer/0001-context.jsonld",
 			"options": {
 				"keyPair": "issuer/0001-keys.json",
 				"verificationMethod": "verifier/0005-verification-key.json",
@@ -122,7 +102,6 @@
             "name": "W3C Test Vector",
             "input": "issuer/0007-in.jsonld",
             "expect": "issuer/0007-out.jsonld",
-            "context": "issuer/0007-context.jsonld",
             "options": {
                 "keyPair": "issuer/0007-keys.json",
                 "verificationMethod": "https://vc.example/issuers/5678#z6MkrJVnaZkeFzdQyMZu1cgjg7k1pZZ6pvBQ7XJPt4swbTQ2",
