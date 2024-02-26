@@ -30,7 +30,7 @@ import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020ProofDraft;
 import com.apicatalog.ld.signature.key.KeyPair;
 import com.apicatalog.vc.integrity.DataIntegrityVocab;
-import com.apicatalog.vc.issuer.IssuedVerifiable;
+import com.apicatalog.vc.issuer.ExpandedVerifiable;
 import com.apicatalog.vc.loader.StaticContextLoader;
 import com.apicatalog.vc.verifier.Verifier;
 
@@ -50,8 +50,6 @@ public class VcTestRunnerJunit {
     public final static DocumentLoader LOADER = new UriBaseRewriter(VcTestCase.BASE, "classpath:",
             new Ed25519ContextLoader(
                     new SchemeRouter()
-//                            .set("http", HttpLoader.defaultInstance())
-//                            .set("https", HttpLoader.defaultInstance())
                             .set("classpath", new ClasspathLoader())));
 
     public final static Ed25519Signature2020 SUITE = new Ed25519Signature2020();
@@ -98,8 +96,9 @@ public class VcTestRunnerJunit {
 
                 draft.created(testCase.created);
                 draft.domain(testCase.domain);
+                draft.domain(testCase.challenge);
 
-                final IssuedVerifiable issued = SUITE.createIssuer(getKeys(keyPairLocation, LOADER))
+                final ExpandedVerifiable issued = SUITE.createIssuer(getKeys(keyPairLocation, LOADER))
                         .loader(LOADER)
                         .sign(testCase.input, draft);
 
@@ -217,7 +216,7 @@ public class VcTestRunnerJunit {
     static final KeyPair getKeys(URI keyPairLocation, DocumentLoader loader)
             throws DocumentError, JsonLdError {
 
-        final JsonArray keys = JsonLd.expand(keyPairLocation).loader(new StaticContextLoader(loader)).get();
+        final JsonArray keys = JsonLd.expand(keyPairLocation).loader(new Ed25519ContextLoader(new StaticContextLoader(loader))).get();
 
         for (final JsonValue key : keys) {
 
