@@ -1,17 +1,21 @@
 package com.apicatalog.ld.signature.ed25519;
 
 import java.net.URI;
-import java.time.Instant;
 
+import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.ld.DocumentError;
 import com.apicatalog.ld.node.LdNode;
-import com.apicatalog.ld.node.LdNodeBuilder;
 import com.apicatalog.ld.signature.VerificationMethod;
+import com.apicatalog.ld.signature.key.KeyPair;
 import com.apicatalog.multibase.Multibase;
 import com.apicatalog.vc.VcVocab;
 import com.apicatalog.vc.integrity.DataIntegrityVocab;
+import com.apicatalog.vc.issuer.Issuer;
 import com.apicatalog.vc.method.MethodAdapter;
-import com.apicatalog.vc.model.Proof;
+import com.apicatalog.vc.proof.Proof;
+import com.apicatalog.vc.proof.ProofValue;
+import com.apicatalog.vc.solid.SolidIssuer;
+import com.apicatalog.vc.solid.SolidProofValue;
 import com.apicatalog.vc.suite.SignatureSuite;
 
 import jakarta.json.JsonObject;
@@ -25,7 +29,12 @@ public final class Ed25519Signature2020 implements SignatureSuite {
     protected static final MethodAdapter METHOD_ADAPTER = new Ed25519KeyAdapter();
 
     @Override
-    public Proof readProof(JsonObject document) throws DocumentError {
+    public boolean isSupported(String proofType, JsonObject expandedProof) {
+        return ID.equals(proofType);
+    }
+
+    @Override
+    public Proof getProof(JsonObject document, DocumentLoader loader) throws DocumentError {
         if (document == null) {
             throw new IllegalArgumentException("The 'document' parameter must not be null.");
         }
@@ -46,54 +55,27 @@ public final class Ed25519Signature2020 implements SignatureSuite {
 
         proof.method = node.node(DataIntegrityVocab.VERIFICATION_METHOD).map(METHOD_ADAPTER);
 
-        proof.value = node.scalar(DataIntegrityVocab.PROOF_VALUE).multibase(Multibase.BASE_58_BTC);
+        proof.value = getProofValue(node.scalar(DataIntegrityVocab.PROOF_VALUE).multibase(Multibase.BASE_58_BTC));
 
         proof.previousProof = node.node(DataIntegrityVocab.PREVIOUS_PROOF).id();
 
         return proof;
     }
 
+    protected ProofValue getProofValue(byte[] proofValue) {
+        return proofValue != null ? new SolidProofValue(proofValue) : null;
+    }
+
     @Override
-    public boolean isSupported(String proofType, JsonObject expandedProof) {
-        return ID.equals(proofType);
+    public Issuer createIssuer(KeyPair keyPair) {
+        return new SolidIssuer(this, keyPair, Multibase.BASE_58_BTC);
     }
 
-    public static Ed25519Signature2020Proof createDraft(
-            VerificationMethod method,
-            URI purpose,
-            Instant created,
-            String domain) throws DocumentError {
-        return createDraft(method, purpose, created, domain, null);
+    public static Ed25519Signature2020ProofDraft createDraft(VerificationMethod verificationMethod, URI purpose) {
+        return new Ed25519Signature2020ProofDraft(verificationMethod, purpose);
     }
 
-    public static Ed25519Signature2020Proof createDraft(
-            VerificationMethod method,
-            URI purpose,
-            Instant created,
-            String domain,
-            String challenge) throws DocumentError {
-
-        final LdNodeBuilder builder = new LdNodeBuilder();
-
-        builder.type(Ed25519Signature2020.ID);
-        builder.set(DataIntegrityVocab.VERIFICATION_METHOD).map(METHOD_ADAPTER, method);
-        builder.set(DataIntegrityVocab.CREATED).xsdDateTime(created != null ? created : Instant.now());
-        builder.set(DataIntegrityVocab.PURPOSE).id(purpose);
-
-        if (domain != null) {
-            builder.set(DataIntegrityVocab.DOMAIN).string(domain);
-        }
-        if (challenge != null) {
-            builder.set(DataIntegrityVocab.CHALLENGE).string(challenge);
-        }
-
-        final Ed25519Signature2020Proof proof = new Ed25519Signature2020Proof(builder.build());
-        proof.created = created;
-        proof.purpose = purpose;
-        proof.method = method;
-        proof.domain = domain;
-        proof.challenge = challenge;
-
-        return proof;
+    public static Ed25519Signature2020ProofDraft createDraft(URI verificationMethod, URI purpose) {
+        return new Ed25519Signature2020ProofDraft(verificationMethod, purpose);
     }
 }

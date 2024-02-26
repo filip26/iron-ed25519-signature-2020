@@ -9,6 +9,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import com.apicatalog.jsonld.JsonLd;
@@ -18,7 +20,6 @@ import com.apicatalog.jsonld.json.JsonLdComparison;
 import com.apicatalog.jsonld.json.JsonUtils;
 import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
-import com.apicatalog.jsonld.loader.HttpLoader;
 import com.apicatalog.jsonld.loader.SchemeRouter;
 import com.apicatalog.ld.DocumentError;
 import com.apicatalog.ld.signature.SigningError;
@@ -26,10 +27,12 @@ import com.apicatalog.ld.signature.VerificationError;
 import com.apicatalog.ld.signature.ed25519.Ed25519ContextLoader;
 import com.apicatalog.ld.signature.ed25519.Ed25519KeyAdapter;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
-import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020Proof;
+import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020ProofDraft;
 import com.apicatalog.ld.signature.key.KeyPair;
 import com.apicatalog.vc.integrity.DataIntegrityVocab;
-import com.apicatalog.vc.processor.Issuer;
+import com.apicatalog.vc.issuer.IssuedVerifiable;
+import com.apicatalog.vc.loader.StaticContextLoader;
+import com.apicatalog.vc.verifier.Verifier;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -47,9 +50,13 @@ public class VcTestRunnerJunit {
     public final static DocumentLoader LOADER = new UriBaseRewriter(VcTestCase.BASE, "classpath:",
             new Ed25519ContextLoader(
                     new SchemeRouter()
-                            .set("http", HttpLoader.defaultInstance())
-                            .set("https", HttpLoader.defaultInstance())
+//                            .set("http", HttpLoader.defaultInstance())
+//                            .set("https", HttpLoader.defaultInstance())
                             .set("classpath", new ClasspathLoader())));
+
+    public final static Ed25519Signature2020 SUITE = new Ed25519Signature2020();
+
+    public final static Verifier VERIFIER = Verifier.with(SUITE).loader(LOADER);
 
     public VcTestRunnerJunit(VcTestCase testCase) {
         this.testCase = testCase;
@@ -63,14 +70,15 @@ public class VcTestRunnerJunit {
         try {
             if (testCase.type.contains(VcTestCase.vocab("VeriferTest"))) {
 
-                Vc.verify(testCase.input, new Ed25519Signature2020())
-                        .loader(LOADER)
-                        .param(DataIntegrityVocab.DOMAIN.name(), testCase.domain)
-                        .param(DataIntegrityVocab.CHALLENGE.name(), testCase.challenge)
-                        .param(DataIntegrityVocab.PURPOSE.name(), testCase.purpose)
-                        .isValid();
+                final Map<String, Object> params = new HashMap<>();
+                params.put(DataIntegrityVocab.DOMAIN.name(), testCase.domain);
+                params.put(DataIntegrityVocab.CHALLENGE.name(), testCase.challenge);
+                params.put(DataIntegrityVocab.PURPOSE.name(), testCase.purpose);
+
+                final Verifiable verifiable = VERIFIER.verify(testCase.input, params);
 
                 assertFalse(isNegative(), "Expected error " + testCase.result);
+                assertNotNull(verifiable);
 
             } else if (testCase.type.contains(VcTestCase.vocab("IssuerTest"))) {
 
@@ -84,38 +92,40 @@ public class VcTestRunnerJunit {
                 }
 
                 // proof draft
-                final Ed25519Signature2020Proof draft = Ed25519Signature2020.createDraft(
+                final Ed25519Signature2020ProofDraft draft = Ed25519Signature2020.createDraft(
                         testCase.verificationMethod,
-                        URI.create("https://w3id.org/security#assertionMethod"), // purpose
-                        testCase.created,
-                        testCase.domain);
+                        URI.create("https://w3id.org/security#assertionMethod"));
 
-                final Issuer issuer = Vc.sign(testCase.input, getKeys(keyPairLocation, LOADER), draft)
-                        .loader(LOADER);
+                draft.created(testCase.created);
+                draft.domain(testCase.domain);
 
-                JsonObject signed = null;
+                final IssuedVerifiable issued = SUITE.createIssuer(getKeys(keyPairLocation, LOADER))
+                        .loader(LOADER)
+                        .sign(testCase.input, draft);
+
+                JsonObject doc = null;
 
                 if (testCase.context != null) {
 
-                    signed = issuer.getCompacted(testCase.context);
+                    doc = issued.compacted(testCase.context);
 
                 } else {
-                    signed = issuer.getExpanded();
+                    doc = issued.expanded();
                 }
 
                 assertFalse(isNegative(), "Expected error " + testCase.result);
 
-                assertNotNull(signed);
+                assertNotNull(doc);
 
                 final Document expected = LOADER.loadDocument(URI.create((String) testCase.result),
                         new DocumentLoaderOptions());
 
-                boolean match = JsonLdComparison.equals(signed,
+                boolean match = JsonLdComparison.equals(doc,
                         expected.getJsonContent().orElse(null));
 
                 if (!match) {
 
-                    write(testCase, signed, expected.getJsonContent().orElse(null));
+                    write(testCase, doc, expected.getJsonContent().orElse(null));
 
                     fail("Expected result does not match");
                 }
@@ -207,7 +217,7 @@ public class VcTestRunnerJunit {
     static final KeyPair getKeys(URI keyPairLocation, DocumentLoader loader)
             throws DocumentError, JsonLdError {
 
-        final JsonArray keys = JsonLd.expand(keyPairLocation).loader(loader).get();
+        final JsonArray keys = JsonLd.expand(keyPairLocation).loader(new StaticContextLoader(loader)).get();
 
         for (final JsonValue key : keys) {
 
