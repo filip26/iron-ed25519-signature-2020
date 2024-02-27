@@ -123,7 +123,7 @@ public final class Ed25519Signature2020Proof implements Proof, MethodAdapter {
     }
     
     @Override
-    public void verify(JsonStructure context, JsonObject data, VerificationKey method) throws VerificationError {
+    public void verify(JsonStructure context, JsonObject data, VerificationKey method) throws VerificationError, DocumentError {
         value.verify(CRYPTO, context, data, unsigned(), method.publicKey());
     }
     

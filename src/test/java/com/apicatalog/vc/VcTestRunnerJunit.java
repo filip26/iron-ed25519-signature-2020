@@ -30,8 +30,8 @@ import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020ProofDraft;
 import com.apicatalog.ld.signature.key.KeyPair;
 import com.apicatalog.vc.integrity.DataIntegrityVocab;
-import com.apicatalog.vc.issuer.ExpandedVerifiable;
 import com.apicatalog.vc.loader.StaticContextLoader;
+import com.apicatalog.vc.processor.ExpandedVerifiable;
 import com.apicatalog.vc.verifier.Verifier;
 
 import jakarta.json.Json;
