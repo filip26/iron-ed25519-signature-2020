@@ -12,8 +12,7 @@ An implementation of the [W3C Ed25519Signature2020 Suite](https://www.w3.org/TR/
 
 ## Features
 * [Ed25519Signature2020](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite)
-  * Verifying VC/VP
-  * Issuing VC/VP
+  * Verifier, Issuer
 * [VC HTTP API & Service](https://github.com/filip26/iron-vc-api)
 
 ## Installation
@@ -26,13 +25,13 @@ Java 17+
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>iron-ed25519-cryptosuite-2020</artifactId>
-    <version>0.11.0</version>
+    <version>0.14.0</version>
 </dependency>
 
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>iron-verifiable-credentials</artifactId>
-    <version>0.11.0</version>
+    <version>0.14.0</version>
 </dependency>
 ```
 
@@ -41,35 +40,36 @@ Java 17+
 Android 12+ (API Level >=31)
 
 ```gradle
-compile group: 'com.apicatalog', name: 'iron-ed25519-cryptosuite-2020-jre8', version: '0.11.0'
-compile group: 'com.apicatalog', name: 'iron-verifiable-credentials-jre8', version: '0.11.0'
+implementation("com.apicatalog:iron-ed25519-cryptosuite-2020-jre8:0.14.0")
+implementation("com.apicatalog:iron-verifiable-credentials-jre8:0.14.0")
 ```
-
-## Documentation
-
-[![javadoc](https://javadoc.io/badge2/com.apicatalog/iron-ed25519-cryptosuite-2020/javadoc.svg)](https://javadoc.io/doc/com.apicatalog/iron-ed25519-cryptosuite-2020)
 
 ## Usage
 
-### Verifying 
+### Verifier
 
-```java
+```javascript
+// create a new verifier instance
+static Verifier VERIFIER = Verifier.with(new Ed25519Signature2020())
+    .loader(new Ed25519ContextLoader())
+    // options
+    .statusValidator(...)
+    .subjectValidator(...);
+
 try {
-  Vc.verify(credential|presentation, new Ed25519Signature2020())
-      
-    // optional
-    .base(...)
-    .loader(new Ed25519ContextLoader()) 
-    .statusVerifier(...)
-    .useBundledContexts(true|false)
-
-    // custom | suite specific | parameters
-    .param(DataIntegrity.DOMAIN.name(), ....)
-
-    // assert document validity
-    .isValid();
-    
-} catch (VerificationError | DataError e) {
+  // verify the given input proof(s)
+  var verifiable = VERIFIER.verify(credential|presentation);
+  
+  // or with runtime parameters e.g. domain, challenge, etc.
+  var verifiable = VERIFIER.verify(credential|presentation, parameters);
+  
+  // get verified details
+  verifiable.subject()
+  verifiable.id()
+  verifiable.type()
+  // ...
+  
+} catch (VerificationError | DocumentError e) {
   ...
 }
 
@@ -77,26 +77,34 @@ try {
 
 ### Issuing
 
-```java
-var proofDraft = Ed25519Signature2020.createDraft(
-    verificationMethod,
-    purpose,
-    created,    
-    domain     // optional
-    );
+```javascript
+// create a signature suite static instance
+static SignatureSuite SUITE = new Ed25519Signature2020();
 
-Vc.sign(credential|presentation, keys, proofDraft)
+// create a new issuer instance
+Issuer ISSUER = SUITE.createIssuer(keyPairProvider)
+    .loader(Ed25519ContextLoader());
+    
+try {
+  // create a new proof draft
+  var proofDraft = SUITE.createDraft(verificationMethod, purpose);
+  // set custom options
+  proofDraft.created(...);
+  proofDraft.domain(...);
+  ...
 
-   // optional
-   .base(...)
-   .loader(new Ed25519ContextLoader()) 
-   .statusVerifier(...)
-   .useBundledContexts(true|false)
-
-    // return signed document in a compacted form
-   .getCompacted();
+  // issue a new verifiable, i.e. sign the input and add a new proof
+  var verifiable = ISSUER.sign(credential|presentation, proofDraft).compacted();
+  
+} catch (SigningError | DocumentError e) {
+  ...
+}
 
 ```
+
+## Documentation
+
+[![javadoc](https://javadoc.io/badge2/com.apicatalog/iron-ed25519-cryptosuite-2020/javadoc.svg)](https://javadoc.io/doc/com.apicatalog/iron-ed25519-cryptosuite-2020)
 
 ## Contributing
 
