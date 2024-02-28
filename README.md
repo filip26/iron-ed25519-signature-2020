@@ -75,7 +75,7 @@ try {
 
 ```
 
-### Issuing
+### Issuer
 
 ```javascript
 // create a signature suite static instance
