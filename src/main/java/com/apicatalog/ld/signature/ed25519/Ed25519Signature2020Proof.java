@@ -71,17 +71,19 @@ public final class Ed25519Signature2020Proof implements Proof, MethodAdapter {
         if (purpose == null) {
             throw new DocumentError(ErrorType.Missing, "ProofPurpose");
         }
-        if (value == null || ((SolidProofValue)value).toByteArray().length == 0) {
+        if (value == null || ((SolidProofValue) value).toByteArray().length == 0) {
             throw new DocumentError(ErrorType.Missing, "ProofValue");
         }
         // proof value must be 64 bytes
-        if (((SolidProofValue)value).toByteArray().length != 64) {
+        if (((SolidProofValue) value).toByteArray().length != 64) {
             throw new DocumentError(ErrorType.Invalid, "ProofValue");
         }
 
-        assertEquals(params, DataIntegrityVocab.PURPOSE, purpose.toString()); // TODO compare as URI, expect URI in params
-        assertEquals(params, DataIntegrityVocab.CHALLENGE, challenge);
-        assertEquals(params, DataIntegrityVocab.DOMAIN, domain);
+        if (params != null) {
+            assertEquals(params, DataIntegrityVocab.PURPOSE, purpose.toString()); // TODO compare as URI, expect URI in params
+            assertEquals(params, DataIntegrityVocab.CHALLENGE, challenge);
+            assertEquals(params, DataIntegrityVocab.DOMAIN, domain);
+        }
     }
 
     protected static void assertEquals(Map<String, Object> params, Term name, String param) throws DocumentError {
@@ -121,12 +123,12 @@ public final class Ed25519Signature2020Proof implements Proof, MethodAdapter {
     public CryptoSuite cryptoSuite() {
         return CRYPTO;
     }
-    
+
     @Override
     public void verify(JsonStructure context, JsonObject data, VerificationKey method) throws VerificationError, DocumentError {
         value.verify(CRYPTO, context, data, unsigned(), method.publicKey());
     }
-    
+
     protected JsonObject unsigned() {
         return Json.createObjectBuilder(expanded).remove(DataIntegrityVocab.PROOF_VALUE.uri()).build();
     }
