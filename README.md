@@ -3,6 +3,7 @@
 An implementation of the [W3C Ed25519Signature2020 Cryptosuite](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite) in Java.
 
 [![Java 17 CI](https://github.com/filip26/iron-ed25519-signature-2020/actions/workflows/java17-build.yml/badge.svg)](https://github.com/filip26/iron-ed25519-signature-2020/actions/workflows/java17-build.yml)
+[![CodeQL Advanced](https://github.com/filip26/iron-ed25519-signature-2020/actions/workflows/codeql.yml/badge.svg)](https://github.com/filip26/iron-ed25519-signature-2020/actions/workflows/codeql.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/827b291e7e72417996e4167d37a25783)](https://app.codacy.com/gh/filip26/iron-ed25519-cryptosuite-2020/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/827b291e7e72417996e4167d37a25783)](https://app.codacy.com/gh/filip26/iron-ed25519-cryptosuite-2020/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=filip26_iron-ed25519-cryptosuite-2020&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=filip26_iron-ed25519-cryptosuite-2020)
