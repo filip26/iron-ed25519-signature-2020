@@ -11,7 +11,6 @@ import java.security.spec.EdECPoint;
 import java.security.spec.EdECPrivateKeySpec;
 import java.security.spec.EdECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.NamedParameterSpec;
 
 import com.apicatalog.ld.signature.SigningError;
@@ -22,14 +21,14 @@ import com.apicatalog.ld.signature.key.KeyPair;
 
 class NativeSignatureProvider implements SignatureAlgorithm {
 
-    private final String type;
+    final String type;
 
-    public NativeSignatureProvider(String type) {
+    public NativeSignatureProvider(final String type) {
         this.type = type;
     }
 
     @Override
-    public void verify(byte[] publicKey, byte[] signature, byte[] data) throws VerificationError {
+    public void verify(final byte[] publicKey, final byte[] signature, final byte[] data) throws VerificationError {
         try {
             java.security.Signature suite = java.security.Signature.getInstance(type);
 
@@ -40,14 +39,14 @@ class NativeSignatureProvider implements SignatureAlgorithm {
                 throw new VerificationError(Code.InvalidSignature);
             }
 
-        } catch (InvalidParameterSpecException | InvalidKeySpecException | InvalidKeyException
+        } catch (InvalidKeySpecException | InvalidKeyException
                 | NoSuchAlgorithmException | SignatureException e) {
             throw new VerificationError(Code.InvalidSignature, e);
         }
     }
 
     @Override
-    public byte[] sign(byte[] privateKey, byte[] data) throws SigningError {
+    public byte[] sign(final byte[] privateKey, final byte[] data) throws SigningError {
 
         try {
             java.security.Signature suite = java.security.Signature.getInstance(type);
@@ -57,7 +56,7 @@ class NativeSignatureProvider implements SignatureAlgorithm {
 
             return suite.sign();
 
-        } catch (InvalidParameterSpecException | InvalidKeySpecException | InvalidKeyException
+        } catch (InvalidKeySpecException | InvalidKeyException
                 | NoSuchAlgorithmException | SignatureException e) {
             throw new SigningError(SigningError.Code.Internal, e);
         }
@@ -65,10 +64,10 @@ class NativeSignatureProvider implements SignatureAlgorithm {
 
     @Override
     public KeyPair keygen() {
-        throw new UnsupportedOperationException("Use iron-verifiable-credentials-jre8");
+        throw new UnsupportedOperationException();
     }
 
-    private PublicKey getPublicKey(final byte[] publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidParameterSpecException {
+    PublicKey getPublicKey(final byte[] publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         final KeyFactory kf = KeyFactory.getInstance(type);
 
@@ -90,17 +89,16 @@ class NativeSignatureProvider implements SignatureAlgorithm {
 
         key = reverse(key);
 
-        BigInteger y = new BigInteger(1, key);
-
-        NamedParameterSpec paramSpec = new NamedParameterSpec(type);
-        EdECPoint ep = new EdECPoint(xisodd, y);
-        EdECPublicKeySpec pubSpec = new EdECPublicKeySpec(paramSpec, ep);
-        PublicKey pub = kf.generatePublic(pubSpec);
-        return pub;
+        return kf.generatePublic(
+                new EdECPublicKeySpec(
+                        new NamedParameterSpec(type),
+                        new EdECPoint(
+                                xisodd,
+                                new BigInteger(1, key))));
     }
 
-    private PrivateKey getPrivateKey(byte[] privateKey)
-            throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidParameterSpecException {
+    PrivateKey getPrivateKey(byte[] privateKey)
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
         KeyFactory kf = KeyFactory.getInstance(type);
 
         NamedParameterSpec paramSpec = new NamedParameterSpec(type);
@@ -108,7 +106,7 @@ class NativeSignatureProvider implements SignatureAlgorithm {
         return kf.generatePrivate(spec);
     }
 
-    private final static byte[] reverse(byte[] data) {
+    static final byte[] reverse(byte[] data) {
         final byte[] reversed = new byte[data.length];
         for (int i = 0; i < data.length; i++) {
             reversed[data.length - i - 1] = data[i];
