@@ -1,9 +1,8 @@
-# Iron Ed25519 Signature 2020 Suite
+# Iron Ed25519 Signature 2020 Cryptosuite
 
-An implementation of the [W3C Ed25519Signature2020 Suite](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite) in Java.
+An implementation of the [W3C Ed25519Signature2020 Cryptosuite](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite) in Java.
 
 [![Java 17 CI](https://github.com/filip26/iron-ed25519-cryptosuite-2020/actions/workflows/java17-build.yml/badge.svg)](https://github.com/filip26/iron-ed25519-cryptosuite-2020/actions/workflows/java17-build.yml)
-[![Android (Java 8) CI](https://github.com/filip26/iron-ed25519-cryptosuite-2020/actions/workflows/java8-build.yml/badge.svg)](https://github.com/filip26/iron-ed25519-cryptosuite-2020/actions/workflows/java8-build.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/827b291e7e72417996e4167d37a25783)](https://app.codacy.com/gh/filip26/iron-ed25519-cryptosuite-2020/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/827b291e7e72417996e4167d37a25783)](https://app.codacy.com/gh/filip26/iron-ed25519-cryptosuite-2020/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=filip26_iron-ed25519-cryptosuite-2020&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=filip26_iron-ed25519-cryptosuite-2020)
@@ -13,7 +12,7 @@ An implementation of the [W3C Ed25519Signature2020 Suite](https://www.w3.org/TR/
 ## Features
 * [Ed25519Signature2020](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite)
   * Verifier, Issuer
-* [VC HTTP API & Service](https://github.com/filip26/iron-vc-api)
+* :package: [VC HTTP API & Service](https://github.com/filip26/iron-vc-api)
 
 ## Installation
 
@@ -127,7 +126,7 @@ Fork and clone the project repository.
 ```
 
 ## Resources
-* [W3C Ed25519Signature2020 Suite](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite)
+* [Data Integrity EdDSA Cryptosuites v1.0](https://www.w3.org/TR/vc-di-eddsa/)
 * [Iron Verifiable Credentials](https://github.com/filip26/iron-verifiable-credentials)
 
 ## Sponsors
