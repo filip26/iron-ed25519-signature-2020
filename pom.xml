@@ -11,11 +11,11 @@
 
     <packaging>jar</packaging>
 
-    <name>Iron Ed25519 Signature 2020 Cryptosuite</name>
+    <name>Iron Ed25519 Signature 2020 Suite</name>
 
     <description>
         An implementation of the W3C Verifiable Credentials Ed25519Signature2020
-        Cryptosuite in Java
+        Suite in Java
     </description>
 
     <licenses>
@@ -119,10 +119,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <description>Iron Ed25519Signature2020 Documentation</description>
-                    <doctitle>Iron Ed25519Signature2020 Documentation</doctitle>
+                    <description>Iron Ed25519Signature2020 Suite Documentation</description>
+                    <doctitle>Iron Ed25519Signature2020 Suite Documentation</doctitle>
                     <header>
-                        <![CDATA[<br>Iron Ed25519Signature2020 v${project.version}]]>
+                        <![CDATA[<br>Iron Ed25519Signature2020 Suite v${project.version}]]>
                     </header>
                     <failOnWarnings>false</failOnWarnings>
                     <additionalOptions>
