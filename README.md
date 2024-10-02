@@ -1,6 +1,6 @@
-# Iron Ed25519 Signature 2020 Cryptosuite
+# Iron Ed25519 Signature 2020 Suite
 
-An implementation of the [W3C Ed25519Signature2020 Cryptosuite](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite) in Java.
+An implementation of the [W3C Ed25519Signature2020 Suite](https://www.w3.org/TR/vc-di-eddsa/#the-ed25519signature2020-suite) in Java.
 
 [![Java 17 CI](https://github.com/filip26/iron-ed25519-signature-2020/actions/workflows/java17-build.yml/badge.svg)](https://github.com/filip26/iron-ed25519-signature-2020/actions/workflows/java17-build.yml)
 [![CodeQL Advanced](https://github.com/filip26/iron-ed25519-signature-2020/actions/workflows/codeql.yml/badge.svg)](https://github.com/filip26/iron-ed25519-signature-2020/actions/workflows/codeql.yml)
