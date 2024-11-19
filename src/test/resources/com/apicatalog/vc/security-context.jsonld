@@ -21,8 +21,8 @@
 					"@id": "https://w3id.org/security#publicKeyMultibase",
 					"@type": "https://w3id.org/security#multibase"
 				},
-				"privateKeyMultibase": {
-					"@id": "https://w3id.org/security#privateKeyMultibase",
+				"secretKeyMultibase": {
+					"@id": "https://w3id.org/security#secretKeyMultibase",
 					"@type": "https://w3id.org/security#multibase"
 				}
 			}

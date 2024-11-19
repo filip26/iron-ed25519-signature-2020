@@ -6,7 +6,5 @@
 	"type": "VerifiableCredential",
 	"issuer": "https://github.com/filip26/iron-verifiable-credentials/issuer/23",
 	"issuanceDate": "2022-06-13T19:54:42Z",
-	"credentialSubject": {
-		"id": "did:example:ebfeb1f712ebc6f1c276e12ec21"
-	}
+	"credentialSubject": "did:example:ebfeb1f712ebc6f1c276e12ec21"
 }

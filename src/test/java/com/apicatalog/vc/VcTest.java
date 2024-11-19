@@ -1,7 +1,5 @@
 package com.apicatalog.vc;
 
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -16,7 +14,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdError;
 import com.apicatalog.jsonld.document.JsonDocument;
-import com.apicatalog.ld.signature.ed25519.Ed25519ContextLoader;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
@@ -38,8 +35,6 @@ class VcTest {
     @MethodSource({ "issuerManifest" })
     @Order(3)
     void sign(VcTestCase testCase) {
-        assumeFalse("t0005".equals(testCase.id.getFragment())); // skip require issuanceDate when issuing
-
         new VcTestRunnerJunit(testCase).execute();
     }
 

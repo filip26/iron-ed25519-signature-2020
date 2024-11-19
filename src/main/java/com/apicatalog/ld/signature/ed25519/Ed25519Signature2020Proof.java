@@ -7,6 +7,7 @@ import java.util.Map;
 import com.apicatalog.controller.key.VerificationKey;
 import com.apicatalog.cryptosuite.CryptoSuite;
 import com.apicatalog.cryptosuite.VerificationError;
+import com.apicatalog.cryptosuite.VerificationError.VerificationErrorCode;
 import com.apicatalog.ld.DocumentError;
 import com.apicatalog.ld.DocumentError.ErrorType;
 import com.apicatalog.linkedtree.orm.Adapter;
@@ -41,6 +42,10 @@ public interface Ed25519Signature2020Proof extends Proof {
     @Adapter(XsdDateTimeAdapter.class)
     Instant created();
 
+    @Adapter(XsdDateTimeAdapter.class)
+    @Term(value = "expiration", compact = false)
+    Instant expires();
+    
     /**
      * A string value specifying the restricted domain of the proof.
      *
@@ -58,6 +63,9 @@ public interface Ed25519Signature2020Proof extends Proof {
     @Term
     String challenge();
 
+    @Term
+    String nonce();
+    
     @Term("proofValue")
     @Provided
     @Override
@@ -83,11 +91,17 @@ public interface Ed25519Signature2020Proof extends Proof {
         if (method().id() == null) {
             throw new DocumentError(ErrorType.Missing, "VerificationMethodId");
         }
+        
+        if (created() != null && expires() != null && created().isAfter(expires())) {
+            throw new DocumentError(ErrorType.Invalid, "ValidityPeriod");
+        }
+
 
         if (params != null) {
             ModelValidation.assertEquals(params, VcdiVocab.PURPOSE, purpose());
             ModelValidation.assertEquals(params, VcdiVocab.CHALLENGE, challenge());
             ModelValidation.assertEquals(params, VcdiVocab.DOMAIN, domain());
+            ModelValidation.assertEquals(params, VcdiVocab.NONCE, nonce());
         }
     }
     
@@ -99,6 +113,11 @@ public interface Ed25519Signature2020Proof extends Proof {
         if (created() != null && Instant.now().isBefore(created())) {
             throw new DocumentError(ErrorType.Invalid, "Created");
         }
+        
+        if (expires() != null && Instant.now().isAfter(expires())) {
+            throw new VerificationError(VerificationErrorCode.Expired);
+        }
+        
         // verify signature
         signature().verify(key);
     }

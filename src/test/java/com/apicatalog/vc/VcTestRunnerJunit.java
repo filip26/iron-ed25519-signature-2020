@@ -18,6 +18,8 @@ import java.util.stream.Stream;
 import com.apicatalog.controller.key.KeyPair;
 import com.apicatalog.cryptosuite.SigningError;
 import com.apicatalog.cryptosuite.VerificationError;
+import com.apicatalog.did.key.DidKey;
+import com.apicatalog.did.key.DidKeyResolver;
 import com.apicatalog.jsonld.JsonLdError;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.json.JsonLdComparison;
@@ -34,6 +36,9 @@ import com.apicatalog.linkedtree.adapter.NodeAdapterError;
 import com.apicatalog.linkedtree.builder.TreeBuilderError;
 import com.apicatalog.linkedtree.jsonld.io.JsonLdReader;
 import com.apicatalog.linkedtree.orm.mapper.TreeReaderMapping;
+import com.apicatalog.multicodec.MulticodecDecoder;
+import com.apicatalog.multicodec.codec.KeyCodec;
+import com.apicatalog.vc.method.resolver.ControllableKeyProvider;
 import com.apicatalog.vc.method.resolver.MethodPredicate;
 import com.apicatalog.vc.method.resolver.MethodSelector;
 import com.apicatalog.vc.method.resolver.VerificationKeyProvider;
@@ -53,15 +58,9 @@ public class VcTestRunnerJunit {
 
     private final VcTestCase testCase;
 
-//    public final static DocumentLoader LOADER = new UriBaseRewriter(VcTestCase.BASE, "classpath:",
-//            new Ed25519ContextLoader(
-//                    new SchemeRouter()
-//                            .set("classpath", new ClasspathLoader())));
-
     final static DocumentLoader LOADER = new Ed25519ContextLoader(new UriBaseRewriter(VcTestCase.BASE, "classpath:",
             new SchemeRouter().set("classpath", new ClasspathLoader())));
 
-    
     final static VerificationKeyProvider RESOLVERS = defaultResolvers(LOADER);
 
     public final static Ed25519Signature2020 SUITE = new Ed25519Signature2020();
@@ -90,7 +89,6 @@ public class VcTestRunnerJunit {
                 assertNotNull(verifiable);
                 assertFalse(isNegative(), "Expected error " + testCase.result);
 
-
             } else if (testCase.type.contains(VcTestCase.vocab("IssuerTest"))) {
 
                 assertNotNull(testCase.result);
@@ -109,25 +107,16 @@ public class VcTestRunnerJunit {
 
                 draft.created(testCase.created);
                 draft.domain(testCase.domain);
-                draft.domain(testCase.challenge);
+                draft.challenge(testCase.challenge);
+                draft.nonce(testCase.nonce);
 
                 final JsonObject issued = SUITE.createIssuer(getKeys(keyPairLocation, LOADER))
                         .loader(LOADER)
                         .sign(testCase.input, draft);
 
-//                JsonObject doc = null;
-//
-//                if (testCase.context != null) {
-//
-//                    doc = issued.compacted(testCase.context);
-//
-//                } else {
-//                    doc = issued.expanded();
-//                }
+                assertNotNull(issued);
 
                 assertFalse(isNegative(), "Expected error " + testCase.result);
-
-                assertNotNull(issued);
 
                 final Document expected = LOADER.loadDocument(URI.create((String) testCase.result),
                         new DocumentLoaderOptions());
@@ -165,7 +154,7 @@ public class VcTestRunnerJunit {
         } catch (JsonLdError e) {
             e.printStackTrace();
             fail(e);
-            
+
         } catch (Exception e) {
             assertException(e.getClass().getSimpleName(), e);
         }
@@ -243,14 +232,15 @@ public class VcTestRunnerJunit {
 
     static final VerificationKeyProvider defaultResolvers(DocumentLoader loader) {
 
-//        byte[] wellKnownPublicKey = TestMulticodecKeyMapper.PUBLIC_KEY_CODEC.decode(
-//                Multibase.BASE_58_BTC.decode("z5C4SPo8HWx5EYE7nLGYfRqUcPG4eN6vezEsobV622h2danE"));
-
         return MethodSelector.create()
                 .with(MethodPredicate.methodId(
-                        // accept only https
+                        // accept only https Ed25519VerificationKey2020
                         m -> m.getScheme().equalsIgnoreCase("https")),
                         new Ed25519VerificationKey2020Provider(loader))
+
+                // accept did:key
+                .with(MethodPredicate.methodId(DidKey::isDidKeyUrl),
+                        ControllableKeyProvider.of(new DidKeyResolver(MulticodecDecoder.getInstance(KeyCodec.ED25519_PUBLIC_KEY, KeyCodec.ED25519_PRIVATE_KEY))))
 
                 .build();
     }

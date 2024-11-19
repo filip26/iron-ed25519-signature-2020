@@ -1,5 +1,7 @@
 package com.apicatalog.vc;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.net.URI;
 import java.time.Instant;
 import java.util.Set;
@@ -9,9 +11,13 @@ import com.apicatalog.controller.method.VerificationMethod;
 import com.apicatalog.jsonld.json.JsonUtils;
 import com.apicatalog.jsonld.lang.Keywords;
 import com.apicatalog.jsonld.loader.DocumentLoader;
-import com.apicatalog.ld.DocumentError;
-import com.apicatalog.ld.signature.ed25519.Ed25519KeyAdapter;
+import com.apicatalog.ld.signature.ed25519.Ed25519VerificationKey2020;
+import com.apicatalog.linkedtree.adapter.NodeAdapterError;
+import com.apicatalog.linkedtree.builder.TreeBuilderError;
+import com.apicatalog.linkedtree.jsonld.io.JsonLdTreeReader;
+import com.apicatalog.linkedtree.orm.mapper.TreeReaderMapping;
 
+import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
@@ -37,13 +43,19 @@ public class VcTestCase {
     public Instant created;
 
     public String domain;
-    
+
     public String challenge;
-    
-    public String purpose;
+
+    public String nonce;
+
+    public URI purpose;
 
     public URI context;
-    
+
+    public URI proofId;
+
+    public URI previousProof;
+
     public boolean compacted;
 
     public static VcTestCase of(JsonObject test, JsonObject manifest, DocumentLoader loader) {
@@ -73,8 +85,8 @@ public class VcTestCase {
 
         testCase.compacted = test.containsKey(vocab("compacted"))
                 && test.getJsonArray(vocab("compacted"))
-                .getJsonObject(0)
-                .getBoolean(Keywords.VALUE, false);
+                        .getJsonObject(0)
+                        .getBoolean(Keywords.VALUE, false);
 
         if (test.containsKey(da("result"))) {
             final JsonObject result = test.getJsonArray(da("result")).getJsonObject(0);
@@ -100,13 +112,18 @@ public class VcTestCase {
 
             if (options.containsKey(vocab("verificationMethod"))) {
 
-                final JsonObject method = options.getJsonArray(vocab("verificationMethod"))
-                        .getJsonObject(0);
+                final JsonArray method = options.getJsonArray(vocab("verificationMethod"));
 
+                JsonLdTreeReader reader = JsonLdTreeReader.of(TreeReaderMapping.createBuilder()
+                        .scan(Ed25519VerificationKey2020.class)
+                        .scan(VerificationMethod.class)
+                        .build());
                 try {
-                    testCase.verificationMethod = Ed25519KeyAdapter.from(method);
-                } catch (DocumentError e) {
-                    throw new IllegalStateException(e);
+                    testCase.verificationMethod = reader.read(VerificationMethod.class, method);
+
+                } catch (NodeAdapterError | TreeBuilderError e) {
+                    e.printStackTrace();
+                    fail(e);
                 }
             }
 
@@ -119,16 +136,31 @@ public class VcTestCase {
                 testCase.domain = options.getJsonArray(vocab("domain")).getJsonObject(0)
                         .getString(Keywords.VALUE);
             }
-            
+
             if (options.containsKey(vocab("challenge"))) {
                 testCase.challenge = options.getJsonArray(vocab("challenge")).getJsonObject(0)
                         .getString(Keywords.VALUE);
             }
-            
-            if (options.containsKey(vocab("purpose"))) {
-                testCase.purpose = options.getJsonArray(vocab("purpose")).getJsonObject(0)
+
+            if (options.containsKey(vocab("nonce"))) {
+                testCase.nonce = options.getJsonArray(vocab("nonce")).getJsonObject(0)
                         .getString(Keywords.VALUE);
-            }            
+            }
+
+            if (options.containsKey(vocab("purpose"))) {
+                testCase.purpose = URI.create(options.getJsonArray(vocab("purpose")).getJsonObject(0)
+                        .getString(Keywords.VALUE));
+            }
+
+            if (options.containsKey("@id")) {
+                testCase.proofId = URI.create(options.getJsonString("@id").getString());
+            }
+
+            if (options.containsKey(vocab("previousProof"))) {
+                testCase.previousProof = URI.create(options.getJsonArray(vocab("previousProof")).getJsonObject(0)
+                        .getString(Keywords.VALUE));
+            }
+
         }
 
         return testCase;
@@ -151,11 +183,3 @@ public class VcTestCase {
         return base("tests/vocab#").concat(term);
     }
 }
-
-/*
- * LdSchema schema = DataIntegritySchema.getVerificationKey(
- * Ed25519Signature2020.VERIFICATION_KEY_TYPE, DataIntegritySchema.getPublicKey(
- * Algorithm.Base58Btc, Codec.Ed25519PublicKey, k -> k == null || (k.length ==
- * 32 && k.length == 57 && k.length == 114 )) );
- * 
- */
