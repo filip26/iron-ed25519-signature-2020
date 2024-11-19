@@ -17,13 +17,12 @@ import com.apicatalog.multibase.MultibaseAdapter;
 import com.apicatalog.multicodec.key.MulticodecKey;
 import com.apicatalog.multicodec.key.MulticodecKeyMapper;
 
-
 @Fragment
 @Vocab("https://w3id.org/security#")
-@Context(value =  "https://w3id.org/security/suites/ed25519-2020/v1", override = true)
-public interface Ed25519KeyPair2020 extends KeyPair {
-    
-    static final String TYPE = "https://w3id.org/security#Ed25519KeyPair2020";
+@Context(value = "https://w3id.org/security/suites/ed25519-2020/v1", override = true)
+public interface Ed25519VerificationKey2020 extends KeyPair {
+
+    static final String TYPE = "https://w3id.org/security#Ed25519VerificationKey2020";
 
     @Type
     default Collection<String> types() {
@@ -37,16 +36,8 @@ public interface Ed25519KeyPair2020 extends KeyPair {
     @Override
     MulticodecKey publicKey();
 
-    @Term("secretKeyMultibase")
-    @Adapter(MultibaseAdapter.class)
-    @Mapper(MulticodecKeyMapper.class)
-    @Compaction(order = 50)
-    @Override
-    MulticodecKey privateKey();
-
-    static boolean equals(Ed25519KeyPair2020 k1, Ed25519KeyPair2020 k2) {
+    static boolean equals(Ed25519VerificationKey2020 k1, Ed25519VerificationKey2020 k2) {
         return VerificationMethod.equals(k1, k2)
-                && MulticodecKey.equals(k1.publicKey(), k2.publicKey())
-                && MulticodecKey.equals(k1.privateKey(), k2.privateKey());
+                && MulticodecKey.equals(k1.publicKey(), k2.publicKey());
     }
 }

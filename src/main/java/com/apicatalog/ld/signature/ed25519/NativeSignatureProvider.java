@@ -13,13 +13,14 @@ import java.security.spec.EdECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.NamedParameterSpec;
 
-import com.apicatalog.ld.signature.SigningError;
-import com.apicatalog.ld.signature.VerificationError;
-import com.apicatalog.ld.signature.VerificationError.Code;
-import com.apicatalog.ld.signature.algorithm.SignatureAlgorithm;
-import com.apicatalog.ld.signature.key.KeyPair;
+import com.apicatalog.controller.key.KeyPair;
+import com.apicatalog.cryptosuite.SigningError;
+import com.apicatalog.cryptosuite.SigningError.SignatureErrorCode;
+import com.apicatalog.cryptosuite.VerificationError;
+import com.apicatalog.cryptosuite.VerificationError.VerificationErrorCode;
+import com.apicatalog.cryptosuite.algorithm.Signer;
 
-class NativeSignatureProvider implements SignatureAlgorithm {
+class NativeSignatureProvider implements Signer {
 
     final String type;
 
@@ -36,12 +37,12 @@ class NativeSignatureProvider implements SignatureAlgorithm {
             suite.update(data);
 
             if (!suite.verify(signature)) {
-                throw new VerificationError(Code.InvalidSignature);
+                throw new VerificationError(VerificationErrorCode.InvalidSignature);
             }
 
         } catch (InvalidKeySpecException | InvalidKeyException
                 | NoSuchAlgorithmException | SignatureException e) {
-            throw new VerificationError(Code.InvalidSignature, e);
+            throw new VerificationError(VerificationErrorCode.InvalidSignature, e);
         }
     }
 
@@ -58,7 +59,7 @@ class NativeSignatureProvider implements SignatureAlgorithm {
 
         } catch (InvalidKeySpecException | InvalidKeyException
                 | NoSuchAlgorithmException | SignatureException e) {
-            throw new SigningError(SigningError.Code.Internal, e);
+            throw new SigningError(e, SignatureErrorCode.Internal);
         }
     }
 

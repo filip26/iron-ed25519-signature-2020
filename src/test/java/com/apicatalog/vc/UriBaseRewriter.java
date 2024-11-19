@@ -24,7 +24,6 @@ public final class UriBaseRewriter implements DocumentLoader {
 
     @Override
     public Document loadDocument(final URI url, final DocumentLoaderOptions options) throws JsonLdError {
-
         final String sourceUrl = url.toString();
 
         if (!sourceUrl.startsWith(sourceBase)) {

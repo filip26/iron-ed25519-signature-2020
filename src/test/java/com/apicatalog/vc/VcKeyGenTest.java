@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.apicatalog.ld.signature.KeyGenError;
+import com.apicatalog.cryptosuite.KeyGenError;
 
 @DisplayName("Keys Generation")
 @TestMethodOrder(OrderAnnotation.class)

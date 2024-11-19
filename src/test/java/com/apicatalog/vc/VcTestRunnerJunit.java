@@ -12,30 +12,36 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import com.apicatalog.jsonld.JsonLd;
+import com.apicatalog.controller.key.KeyPair;
+import com.apicatalog.cryptosuite.SigningError;
+import com.apicatalog.cryptosuite.VerificationError;
 import com.apicatalog.jsonld.JsonLdError;
 import com.apicatalog.jsonld.document.Document;
 import com.apicatalog.jsonld.json.JsonLdComparison;
-import com.apicatalog.jsonld.json.JsonUtils;
 import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
 import com.apicatalog.jsonld.loader.SchemeRouter;
 import com.apicatalog.ld.DocumentError;
-import com.apicatalog.ld.signature.SigningError;
-import com.apicatalog.ld.signature.VerificationError;
 import com.apicatalog.ld.signature.ed25519.Ed25519ContextLoader;
-import com.apicatalog.ld.signature.ed25519.Ed25519KeyAdapter;
+import com.apicatalog.ld.signature.ed25519.Ed25519KeyPair2020;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020ProofDraft;
-import com.apicatalog.ld.signature.key.KeyPair;
-import com.apicatalog.vc.integrity.DataIntegrityVocab;
-import com.apicatalog.vc.loader.StaticContextLoader;
-import com.apicatalog.vc.processor.ExpandedVerifiable;
+import com.apicatalog.ld.signature.ed25519.Ed25519VerificationKey2020Provider;
+import com.apicatalog.linkedtree.adapter.NodeAdapterError;
+import com.apicatalog.linkedtree.builder.TreeBuilderError;
+import com.apicatalog.linkedtree.jsonld.io.JsonLdReader;
+import com.apicatalog.linkedtree.orm.mapper.TreeReaderMapping;
+import com.apicatalog.vc.method.resolver.MethodPredicate;
+import com.apicatalog.vc.method.resolver.MethodSelector;
+import com.apicatalog.vc.method.resolver.VerificationKeyProvider;
+import com.apicatalog.vc.processor.Parameter;
 import com.apicatalog.vc.verifier.Verifier;
+import com.apicatalog.vcdi.VcdiVocab;
 
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
@@ -47,14 +53,20 @@ public class VcTestRunnerJunit {
 
     private final VcTestCase testCase;
 
-    public final static DocumentLoader LOADER = new UriBaseRewriter(VcTestCase.BASE, "classpath:",
-            new Ed25519ContextLoader(
-                    new SchemeRouter()
-                            .set("classpath", new ClasspathLoader())));
+//    public final static DocumentLoader LOADER = new UriBaseRewriter(VcTestCase.BASE, "classpath:",
+//            new Ed25519ContextLoader(
+//                    new SchemeRouter()
+//                            .set("classpath", new ClasspathLoader())));
+
+    final static DocumentLoader LOADER = new Ed25519ContextLoader(new UriBaseRewriter(VcTestCase.BASE, "classpath:",
+            new SchemeRouter().set("classpath", new ClasspathLoader())));
+
+    
+    final static VerificationKeyProvider RESOLVERS = defaultResolvers(LOADER);
 
     public final static Ed25519Signature2020 SUITE = new Ed25519Signature2020();
 
-    public final static Verifier VERIFIER = Verifier.with(SUITE).loader(LOADER);
+    public final static Verifier VERIFIER = Verifier.with(SUITE).methodResolver(RESOLVERS).loader(LOADER);
 
     public VcTestRunnerJunit(VcTestCase testCase) {
         this.testCase = testCase;
@@ -69,14 +81,15 @@ public class VcTestRunnerJunit {
             if (testCase.type.contains(VcTestCase.vocab("VeriferTest"))) {
 
                 final Map<String, Object> params = new HashMap<>();
-                params.put(DataIntegrityVocab.DOMAIN.name(), testCase.domain);
-                params.put(DataIntegrityVocab.CHALLENGE.name(), testCase.challenge);
-                params.put(DataIntegrityVocab.PURPOSE.name(), testCase.purpose);
+                params.put(VcdiVocab.DOMAIN.name(), testCase.domain);
+                params.put(VcdiVocab.CHALLENGE.name(), testCase.challenge);
+                params.put(VcdiVocab.PURPOSE.name(), testCase.purpose);
 
                 final Verifiable verifiable = VERIFIER.verify(testCase.input, params);
 
-                assertFalse(isNegative(), "Expected error " + testCase.result);
                 assertNotNull(verifiable);
+                assertFalse(isNegative(), "Expected error " + testCase.result);
+
 
             } else if (testCase.type.contains(VcTestCase.vocab("IssuerTest"))) {
 
@@ -98,33 +111,34 @@ public class VcTestRunnerJunit {
                 draft.domain(testCase.domain);
                 draft.domain(testCase.challenge);
 
-                final ExpandedVerifiable issued = SUITE.createIssuer(getKeys(keyPairLocation, LOADER))
+                final JsonObject issued = SUITE.createIssuer(getKeys(keyPairLocation, LOADER))
                         .loader(LOADER)
                         .sign(testCase.input, draft);
 
-                JsonObject doc = null;
-
-                if (testCase.context != null) {
-
-                    doc = issued.compacted(testCase.context);
-
-                } else {
-                    doc = issued.expanded();
-                }
+//                JsonObject doc = null;
+//
+//                if (testCase.context != null) {
+//
+//                    doc = issued.compacted(testCase.context);
+//
+//                } else {
+//                    doc = issued.expanded();
+//                }
 
                 assertFalse(isNegative(), "Expected error " + testCase.result);
 
-                assertNotNull(doc);
+                assertNotNull(issued);
 
                 final Document expected = LOADER.loadDocument(URI.create((String) testCase.result),
                         new DocumentLoaderOptions());
 
-                boolean match = JsonLdComparison.equals(doc,
+                boolean match = JsonLdComparison.equals(
+                        issued,
                         expected.getJsonContent().orElse(null));
 
                 if (!match) {
 
-                    write(testCase, doc, expected.getJsonContent().orElse(null));
+                    write(testCase, issued, expected.getJsonContent().orElse(null));
 
                     fail("Expected result does not match");
                 }
@@ -140,17 +154,20 @@ public class VcTestRunnerJunit {
             }
 
         } catch (VerificationError e) {
-            assertException(e.getCode() != null ? e.getCode().name() : null, e);
+            assertException(e.verificationErrorCode() != null ? e.verificationErrorCode().name() : null, e);
 
         } catch (SigningError e) {
-            assertException(e.getCode() != null ? e.getCode().name() : null, e);
+            assertException(e.signatureErrorCode() != null ? e.signatureErrorCode().name() : null, e);
 
         } catch (DocumentError e) {
-            assertException(e.getCode(), e);
+            assertException(e.code(), e);
 
         } catch (JsonLdError e) {
             e.printStackTrace();
             fail(e);
+            
+        } catch (Exception e) {
+            assertException(e.getClass().getSimpleName(), e);
         }
     }
 
@@ -213,20 +230,39 @@ public class VcTestRunnerJunit {
         writer.println();
     }
 
-    static final KeyPair getKeys(URI keyPairLocation, DocumentLoader loader)
-            throws DocumentError, JsonLdError {
+    static final KeyPair getKeys(final URI keyPairLocation, final DocumentLoader loader)
+            throws DocumentError, JsonLdError, TreeBuilderError, NodeAdapterError {
 
-        final JsonArray keys = JsonLd.expand(keyPairLocation).loader(new Ed25519ContextLoader(new StaticContextLoader(loader))).get();
+        final JsonObject keys = loader.loadDocument(keyPairLocation, new DocumentLoaderOptions()).getJsonContent().map(JsonStructure::asJsonObject).orElseThrow();
 
-        for (final JsonValue key : keys) {
+        JsonLdReader reader = JsonLdReader.of(TreeReaderMapping.createBuilder()
+                .scan(Ed25519KeyPair2020.class).build(), loader);
 
-            if (JsonUtils.isNotObject(key)) {
-                continue;
-            }
+        return reader.read(Ed25519KeyPair2020.class, keys);
+    }
 
-            return (KeyPair) Ed25519KeyAdapter.from(key.asJsonObject());
-        }
-        throw new IllegalStateException();
+    static final VerificationKeyProvider defaultResolvers(DocumentLoader loader) {
+
+//        byte[] wellKnownPublicKey = TestMulticodecKeyMapper.PUBLIC_KEY_CODEC.decode(
+//                Multibase.BASE_58_BTC.decode("z5C4SPo8HWx5EYE7nLGYfRqUcPG4eN6vezEsobV622h2danE"));
+
+        return MethodSelector.create()
+                .with(MethodPredicate.methodId(
+                        // accept only https
+                        m -> m.getScheme().equalsIgnoreCase("https")),
+                        new Ed25519VerificationKey2020Provider(loader))
+
+                .build();
+    }
+
+    static final Map<String, Object> toMap(Parameter<?>... parameters) {
+        return parameters != null && parameters.length > 0
+                ? Stream.of(parameters)
+                        .filter(p -> p.name() != null && p.value() != null)
+                        .collect(Collectors.toMap(
+                                Parameter::name,
+                                Parameter::value))
+                : Collections.emptyMap();
     }
 
 }
