@@ -7,7 +7,7 @@
 
     <groupId>com.apicatalog</groupId>
     <artifactId>iron-ed25519-signature-2020</artifactId>
-    <version>0.15.0-SNAPSHOT</version>
+    <version>0.15.1-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
@@ -60,7 +60,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <envSources>src/main/java17</envSources>
-        <iron.version>0.15.0-SNAPSHOT</iron.version>
+        <iron.version>0.15.1-SNAPSHOT</iron.version>
         <jakarta.json.version>2.0.1</jakarta.json.version>
         <!-- test resources -->
         <junit.version>5.11.3</junit.version>

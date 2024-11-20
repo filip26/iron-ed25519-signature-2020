@@ -24,7 +24,6 @@ import com.apicatalog.vc.issuer.ProofDraft;
 import com.apicatalog.vc.model.ModelValidation;
 import com.apicatalog.vc.model.VerifiableMaterial;
 import com.apicatalog.vc.model.generic.GenericMaterial;
-import com.apicatalog.vcdi.DataIntegrityProof;
 import com.apicatalog.vcdi.VcdiVocab;
 
 import jakarta.json.Json;
@@ -150,14 +149,6 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
 
     public URI id() {
         return id;
-    }
-
-    public VerificationMethod method() {
-        return method;
-    }
-
-    public URI previousProof() {
-        return previousProof;
     }
 
     public URI purpose() {

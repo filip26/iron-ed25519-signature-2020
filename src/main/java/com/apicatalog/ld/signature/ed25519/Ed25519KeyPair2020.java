@@ -7,7 +7,6 @@ import com.apicatalog.controller.key.KeyPair;
 import com.apicatalog.controller.method.VerificationMethod;
 import com.apicatalog.linkedtree.orm.Adapter;
 import com.apicatalog.linkedtree.orm.Compaction;
-import com.apicatalog.linkedtree.orm.Context;
 import com.apicatalog.linkedtree.orm.Fragment;
 import com.apicatalog.linkedtree.orm.Mapper;
 import com.apicatalog.linkedtree.orm.Term;
@@ -20,7 +19,6 @@ import com.apicatalog.multicodec.key.MulticodecKeyMapper;
 
 @Fragment
 @Vocab("https://w3id.org/security#")
-@Context(value =  "https://w3id.org/security/suites/ed25519-2020/v1", override = true)
 public interface Ed25519KeyPair2020 extends KeyPair {
     
     static final String TYPE = "https://w3id.org/security#Ed25519KeyPair2020";
