@@ -17,7 +17,7 @@ import com.apicatalog.vc.loader.StaticContextLoader;
 
 public class Ed25519ContextLoader implements DocumentLoader {
 
-    protected static final Ed25519ContextLoader INSTANCE = new Ed25519ContextLoader();
+    protected static final Ed25519ContextLoader INSTANCE = new Ed25519ContextLoader(null);
 
     protected static final Map<String, Document> staticCache = defaultValues();
 

@@ -107,7 +107,7 @@ public class VcTestRunnerJunit {
                 }
 
                 // proof draft
-                final Ed25519Signature2020ProofDraft draft = Ed25519Signature2020.createDraft(
+                final Ed25519Signature2020ProofDraft draft = SUITE.createDraft(
                         testCase.verificationMethod,
                         URI.create("https://w3id.org/security#assertionMethod"));
 

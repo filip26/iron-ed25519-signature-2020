@@ -70,11 +70,11 @@ public final class Ed25519Signature2020 implements SignatureSuite {
         return new SolidIssuer(this, CRYPTO, keyPair, Multibase.BASE_58_BTC);
     }
 
-    public static Ed25519Signature2020ProofDraft createDraft(VerificationMethod verificationMethod, URI purpose) {
+    public Ed25519Signature2020ProofDraft createDraft(VerificationMethod verificationMethod, URI purpose) {
         return new Ed25519Signature2020ProofDraft(verificationMethod, purpose);
     }
 
-    public static Ed25519Signature2020ProofDraft createDraft(URI verificationMethod, URI purpose) {
+    public Ed25519Signature2020ProofDraft createDraft(URI verificationMethod, URI purpose) {
         return new Ed25519Signature2020ProofDraft(verificationMethod, purpose);
     }
 
