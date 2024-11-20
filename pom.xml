@@ -64,7 +64,6 @@
         <jakarta.json.version>2.0.1</jakarta.json.version>
         <!-- test resources -->
         <junit.version>5.11.3</junit.version>
-
     </properties>
 
     <dependencies>

@@ -58,14 +58,19 @@ public class VcTestRunnerJunit {
 
     private final VcTestCase testCase;
 
-    final static DocumentLoader LOADER = new Ed25519ContextLoader(new UriBaseRewriter(VcTestCase.BASE, "classpath:",
-            new SchemeRouter().set("classpath", new ClasspathLoader())));
+    final static DocumentLoader LOADER = new Ed25519ContextLoader(
+            new UriBaseRewriter(
+                    VcTestCase.BASE,
+                    "classpath:",
+                    new SchemeRouter().set("classpath", new ClasspathLoader())));
 
     final static VerificationKeyProvider RESOLVERS = defaultResolvers(LOADER);
 
     public final static Ed25519Signature2020 SUITE = new Ed25519Signature2020();
 
-    public final static Verifier VERIFIER = Verifier.with(SUITE).methodResolver(RESOLVERS).loader(LOADER);
+    public final static Verifier VERIFIER = Verifier.with(SUITE)
+            .methodResolver(RESOLVERS)
+            .loader(LOADER);
 
     public VcTestRunnerJunit(VcTestCase testCase) {
         this.testCase = testCase;
@@ -83,6 +88,7 @@ public class VcTestRunnerJunit {
                 params.put(VcdiVocab.DOMAIN.name(), testCase.domain);
                 params.put(VcdiVocab.CHALLENGE.name(), testCase.challenge);
                 params.put(VcdiVocab.PURPOSE.name(), testCase.purpose);
+                params.put(VcdiVocab.NONCE.name(), testCase.nonce);
 
                 final Verifiable verifiable = VERIFIER.verify(testCase.input, params);
 
