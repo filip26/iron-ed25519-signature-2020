@@ -38,6 +38,7 @@ import com.apicatalog.linkedtree.jsonld.io.JsonLdReader;
 import com.apicatalog.linkedtree.orm.mapper.TreeReaderMapping;
 import com.apicatalog.multicodec.MulticodecDecoder;
 import com.apicatalog.multicodec.codec.KeyCodec;
+import com.apicatalog.vc.issuer.Issuer;
 import com.apicatalog.vc.method.resolver.ControllableKeyProvider;
 import com.apicatalog.vc.method.resolver.MethodPredicate;
 import com.apicatalog.vc.method.resolver.MethodSelector;
@@ -106,19 +107,19 @@ public class VcTestRunnerJunit {
                     keyPairLocation = URI.create(VcTestCase.base("issuer/0001-keys.json"));
                 }
 
+                // issuer
+                final Issuer issuer = SUITE.createIssuer(getKeys(keyPairLocation, LOADER)).loader(LOADER);
+                
                 // proof draft
-                final Ed25519Signature2020ProofDraft draft = SUITE.createDraft(
-                        testCase.verificationMethod,
-                        URI.create("https://w3id.org/security#assertionMethod"));
+                final Ed25519Signature2020ProofDraft draft = issuer.createDraft(testCase.verificationMethod);
 
+                draft.purpose(URI.create("https://w3id.org/security#assertionMethod"));
                 draft.created(testCase.created);
                 draft.domain(testCase.domain);
                 draft.challenge(testCase.challenge);
                 draft.nonce(testCase.nonce);
 
-                final JsonObject issued = SUITE.createIssuer(getKeys(keyPairLocation, LOADER))
-                        .loader(LOADER)
-                        .sign(testCase.input, draft);
+                final JsonObject issued = issuer.sign(testCase.input, draft);
 
                 assertNotNull(issued);
 

@@ -4,7 +4,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
-import java.util.Collections;
 
 import com.apicatalog.controller.method.VerificationMethod;
 import com.apicatalog.jsonld.JsonLd;
@@ -37,42 +36,13 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
             .scan(Ed25519Signature2020Proof.class)
             .scan(Ed25519VerificationKey2020.class)
             .scan(VerificationMethod.class);
-    
-    protected final URI purpose;
 
-    protected Instant expires;
-    protected Instant created;
-    
     protected String domain;
     protected String challenge;
     protected String nonce;
 
-    public Ed25519Signature2020ProofDraft(
-            VerificationMethod method,
-            URI purpose) {
-        super(method);
-        this.purpose = purpose;
-    }
-
-    public Ed25519Signature2020ProofDraft(
-            URI method,
-            URI purpose) {
-        super(method);
-        this.purpose = purpose;
-    }
-
-    public Ed25519Signature2020ProofDraft created(Instant created) {
-        this.created = created == null
-                ? created
-                : created.truncatedTo(ChronoUnit.SECONDS);
-        return this;
-    }
-
-    public Ed25519Signature2020ProofDraft expires(Instant expires) {
-        this.expires = expires == null
-                ? expires
-                : expires.truncatedTo(ChronoUnit.SECONDS);
-        return this;
+    protected Ed25519Signature2020ProofDraft(VerificationMethod method) {
+        super(Ed25519Signature2020.ID, method);
     }
 
     public Ed25519Signature2020ProofDraft challenge(String challenge) {
@@ -91,7 +61,7 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
     }
 
     @Override
-    public VerifiableMaterial unsigned(DocumentLoader loader, URI base) throws DocumentError {
+    public VerifiableMaterial unsigned(Collection<String> documentContext, DocumentLoader loader, URI base) throws DocumentError {
 
         try {
             Ed25519Signature2020Proof proof = FragmentComposer.create()
@@ -110,7 +80,7 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
 
             JsonArray expanded = JsonLd.expand(JsonDocument.of(compacted)).loader(loader).base(base).get();
 
-            Collection<String> context = Collections.emptyList();
+            Collection<String> context = documentContext;
 
             if (compacted.containsKey(JsonLdKeyword.CONTEXT)) {
                 context = JsonLdContext.strings(compacted, context);
@@ -147,22 +117,6 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
                 expanded);
     }
 
-    public URI id() {
-        return id;
-    }
-
-    public URI purpose() {
-        return purpose;
-    }
-
-    public Instant created() {
-        return created;
-    }
-
-    public Instant expires() {
-        return null;
-    }
-
     public String domain() {
         return domain;
     }
@@ -173,6 +127,20 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
 
     public String nonce() {
         return nonce;
+    }
+
+    public Ed25519Signature2020ProofDraft created(Instant created) {
+        this.created = created == null
+                ? created
+                : created.truncatedTo(ChronoUnit.SECONDS);
+        return this;
+    }
+
+    public Ed25519Signature2020ProofDraft expires(Instant expires) {
+        this.expires = expires == null
+                ? expires
+                : expires.truncatedTo(ChronoUnit.SECONDS);
+        return this;
     }
 
     @Override
@@ -186,40 +154,5 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
         if (created() != null && expires() != null && created().isAfter(expires())) {
             throw new DocumentError(ErrorType.Invalid, "ValidityPeriod");
         }
-    }    
-    /**
-     * Returns an expanded signed proof. i.e. the given proof with proof value attached.
-     * 
-     * @param unsignedProof
-     * @param proofValue
-     * @return
-     */
-//    public static final JsonObject signed(JsonObject unsignedProof, JsonObject proofValue) {
-//        return LdNodeBuilder.of(unsignedProof).set(DataIntegrityVocab.PROOF_VALUE).value(proofValue).build();
-//    }
-//    
-//    protected LdNodeBuilder unsigned(LdNodeBuilder builder) {
-//        super.unsigned(builder, Ed25519Signature2020.METHOD_ADAPTER);
-//        
-//        builder.type(Ed25519Signature2020.ID);
-//        builder.set(DataIntegrityVocab.PURPOSE).id(purpose);
-//        builder.set(DataIntegrityVocab.CREATED).xsdDateTime(created != null ? created : Instant.now());
-//
-//        if (domain != null) {
-//            builder.set(DataIntegrityVocab.DOMAIN).string(domain);
-//        }
-//        if (challenge != null) {
-//            builder.set(DataIntegrityVocab.CHALLENGE).string(challenge);
-//        }
-//        if (nonce != null) {
-//            builder.set(DataIntegrityVocab.NONCE).string(nonce);
-//        }
-//
-//        return builder;
-//    }
-//    
-//    @Override
-//    public Collection<String> context(ModelVersion model) {
-//        return Arrays.asList(Ed25519Signature2020.CONTEXT);
-//    }
+    }
 }

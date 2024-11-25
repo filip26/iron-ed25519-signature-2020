@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.apicatalog.controller.key.KeyPair;
-import com.apicatalog.controller.method.VerificationMethod;
 import com.apicatalog.cryptosuite.CryptoSuite;
 import com.apicatalog.cryptosuite.primitive.MessageDigest;
 import com.apicatalog.cryptosuite.primitive.Urdna2015;
@@ -55,27 +54,19 @@ public final class Ed25519Signature2020 implements SignatureSuite {
 
     static final CryptoSuite CRYPTO = new CryptoSuite(
             "Ed25519",
-            32, // 57, 114 //FIXMe
+            256,
             new Urdna2015(),
             new MessageDigest("SHA-256"),
             new Ed25519Signature2020Provider());
 
-//
-//    protected ProofValue getProofValue(byte[] proofValue) {
-//        return proofValue != null ? new SolidProofValue(proofValue) : null;
-//    }
-//
     @Override
     public Issuer createIssuer(KeyPair keyPair) {
-        return new SolidIssuer(this, CRYPTO, keyPair, Multibase.BASE_58_BTC);
-    }
-
-    public Ed25519Signature2020ProofDraft createDraft(VerificationMethod verificationMethod, URI purpose) {
-        return new Ed25519Signature2020ProofDraft(verificationMethod, purpose);
-    }
-
-    public Ed25519Signature2020ProofDraft createDraft(URI verificationMethod, URI purpose) {
-        return new Ed25519Signature2020ProofDraft(verificationMethod, purpose);
+        return new SolidIssuer(
+                this,
+                CRYPTO,
+                keyPair,
+                Multibase.BASE_58_BTC,
+                Ed25519Signature2020ProofDraft::new);
     }
 
     @Override
@@ -87,7 +78,7 @@ public final class Ed25519Signature2020 implements SignatureSuite {
     }
 
     @Override
-    public Proof getProof(VerifiableMaterial verifiable, VerifiableMaterial proofMaterial, DocumentLoader loader) throws DocumentError {
+    public Proof getProof(VerifiableMaterial verifiable, VerifiableMaterial proofMaterial, DocumentLoader loader, URI base) throws DocumentError {
         try {
             Proof proof = READER.read(Proof.class, Json.createArrayBuilder().add(proofMaterial.expanded()).build());
             if (proof == null) {

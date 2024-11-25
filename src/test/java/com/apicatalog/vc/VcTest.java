@@ -18,7 +18,7 @@ import com.apicatalog.jsonld.document.JsonDocument;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 
-@DisplayName("Verifiable Credentials Test Suite")
+@DisplayName("Ed22519 Signature 2020 Test Suite")
 @TestMethodOrder(OrderAnnotation.class)
 class VcTest {
 
