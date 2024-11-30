@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.apicatalog.controller.key.KeyPair;
-import com.apicatalog.cryptosuite.SigningError;
+import com.apicatalog.cryptosuite.CryptoSuiteError;
 import com.apicatalog.cryptosuite.VerificationError;
 import com.apicatalog.did.key.DidKey;
 import com.apicatalog.did.key.DidKeyResolver;
@@ -26,7 +26,6 @@ import com.apicatalog.jsonld.json.JsonLdComparison;
 import com.apicatalog.jsonld.loader.DocumentLoader;
 import com.apicatalog.jsonld.loader.DocumentLoaderOptions;
 import com.apicatalog.jsonld.loader.SchemeRouter;
-import com.apicatalog.ld.DocumentError;
 import com.apicatalog.ld.signature.ed25519.Ed25519ContextLoader;
 import com.apicatalog.ld.signature.ed25519.Ed25519KeyPair2020;
 import com.apicatalog.ld.signature.ed25519.Ed25519Signature2020;
@@ -38,14 +37,15 @@ import com.apicatalog.linkedtree.jsonld.io.JsonLdReader;
 import com.apicatalog.linkedtree.orm.mapper.TreeReaderMapping;
 import com.apicatalog.multicodec.MulticodecDecoder;
 import com.apicatalog.multicodec.codec.KeyCodec;
+import com.apicatalog.vc.di.VcdiVocab;
 import com.apicatalog.vc.issuer.Issuer;
-import com.apicatalog.vc.method.resolver.ControllableKeyProvider;
-import com.apicatalog.vc.method.resolver.MethodPredicate;
-import com.apicatalog.vc.method.resolver.MethodSelector;
-import com.apicatalog.vc.method.resolver.VerificationKeyProvider;
+import com.apicatalog.vc.method.ControllableKeyProvider;
+import com.apicatalog.vc.method.MethodPredicate;
+import com.apicatalog.vc.method.MethodSelector;
+import com.apicatalog.vc.method.VerificationKeyProvider;
+import com.apicatalog.vc.model.DocumentError;
 import com.apicatalog.vc.processor.Parameter;
 import com.apicatalog.vc.verifier.Verifier;
-import com.apicatalog.vcdi.VcdiVocab;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -91,7 +91,7 @@ public class VcTestRunnerJunit {
                 params.put(VcdiVocab.PURPOSE.name(), testCase.purpose);
                 params.put(VcdiVocab.NONCE.name(), testCase.nonce);
 
-                final Verifiable verifiable = VERIFIER.verify(testCase.input, params);
+                final VerifiableDocument verifiable = VERIFIER.verify(testCase.input, params);
 
                 assertNotNull(verifiable);
                 assertFalse(isNegative(), "Expected error " + testCase.result);
@@ -150,10 +150,10 @@ public class VcTestRunnerJunit {
             }
 
         } catch (VerificationError e) {
-            assertException(e.verificationErrorCode() != null ? e.verificationErrorCode().name() : null, e);
+            assertException(e.code() != null ? e.code().name() : null, e);
 
-        } catch (SigningError e) {
-            assertException(e.signatureErrorCode() != null ? e.signatureErrorCode().name() : null, e);
+        } catch (CryptoSuiteError e) {
+            assertException(e.code() != null ? e.code().name() : null, e);
 
         } catch (DocumentError e) {
             assertException(e.code(), e);

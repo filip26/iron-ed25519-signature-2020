@@ -8,10 +8,8 @@ import java.util.logging.Logger;
 import com.apicatalog.controller.key.KeyPair;
 import com.apicatalog.cryptosuite.CryptoSuite;
 import com.apicatalog.cryptosuite.primitive.MessageDigest;
-import com.apicatalog.cryptosuite.primitive.Urdna2015;
+import com.apicatalog.cryptosuite.primitive.RDFC;
 import com.apicatalog.jsonld.loader.DocumentLoader;
-import com.apicatalog.ld.DocumentError;
-import com.apicatalog.ld.DocumentError.ErrorType;
 import com.apicatalog.linkedtree.Linkable;
 import com.apicatalog.linkedtree.adapter.NodeAdapterError;
 import com.apicatalog.linkedtree.builder.TreeBuilderError;
@@ -23,15 +21,18 @@ import com.apicatalog.linkedtree.orm.mapper.TreeReaderMapping;
 import com.apicatalog.linkedtree.orm.proxy.PropertyValueConsumer;
 import com.apicatalog.multibase.Multibase;
 import com.apicatalog.multibase.MultibaseAdapter;
+import com.apicatalog.vc.di.VcdiVocab;
 import com.apicatalog.vc.issuer.Issuer;
+import com.apicatalog.vc.model.DocumentError;
+import com.apicatalog.vc.model.DocumentModel;
 import com.apicatalog.vc.model.VerifiableMaterial;
+import com.apicatalog.vc.model.DocumentError.ErrorType;
 import com.apicatalog.vc.model.generic.GenericMaterial;
 import com.apicatalog.vc.proof.Proof;
 import com.apicatalog.vc.proof.ProofValue;
 import com.apicatalog.vc.solid.SolidIssuer;
 import com.apicatalog.vc.solid.SolidProofValue;
 import com.apicatalog.vc.suite.SignatureSuite;
-import com.apicatalog.vcdi.VcdiVocab;
 import com.apicatalog.vcdm.VcdmVocab;
 
 import jakarta.json.Json;
@@ -55,7 +56,7 @@ public final class Ed25519Signature2020 implements SignatureSuite {
     static final CryptoSuite CRYPTO = new CryptoSuite(
             "Ed25519",
             256,
-            new Urdna2015(),
+            new RDFC(),
             new MessageDigest("SHA-256"),
             new Ed25519Signature2020Provider());
 
@@ -78,7 +79,11 @@ public final class Ed25519Signature2020 implements SignatureSuite {
     }
 
     @Override
-    public Proof getProof(VerifiableMaterial verifiable, VerifiableMaterial proofMaterial, DocumentLoader loader, URI base) throws DocumentError {
+    public Proof getProof(DocumentModel model, DocumentLoader loader, URI base) throws DocumentError {
+        
+        VerifiableMaterial data =  model.data();
+        VerifiableMaterial proofMaterial = model.proofs().iterator().next();
+        
         try {
             Proof proof = READER.read(Proof.class, Json.createArrayBuilder().add(proofMaterial.expanded()).build());
             if (proof == null) {
@@ -101,7 +106,7 @@ public final class Ed25519Signature2020 implements SignatureSuite {
                             Json.createObjectBuilder(proofMaterial.expanded())
                                     .remove(VcdiVocab.PROOF_VALUE.uri()).build());
 
-                    proofValue = getProofValue(verifiable, unsignedProof, signature.byteArrayValue(), loader);
+                    proofValue = getProofValue(proof, data, unsignedProof, signature.byteArrayValue(), loader);
                     consumer.acceptFragmentPropertyValue("signature", proofValue);
                 }
             }
@@ -122,7 +127,7 @@ public final class Ed25519Signature2020 implements SignatureSuite {
         }
     }
 
-    protected ProofValue getProofValue(VerifiableMaterial data, VerifiableMaterial proof, byte[] proofValue, DocumentLoader loader) throws DocumentError {
+    protected ProofValue getProofValue(Proof proof, VerifiableMaterial data, VerifiableMaterial proofMaterial, byte[] proofValue, DocumentLoader loader) throws DocumentError {
         if (proofValue == null) {
             return null;
         }
@@ -131,6 +136,6 @@ public final class Ed25519Signature2020 implements SignatureSuite {
             LOGGER.log(Level.WARNING, "Invalid proof value length [{0}]. Expected 64 bytes.", proofValue.length);
             throw new DocumentError(ErrorType.Invalid, "ProofValueLength");
         }
-        return SolidProofValue.of(CRYPTO, data, proof, proofValue);
+        return SolidProofValue.of(CRYPTO, data, proofMaterial, proofValue, proof);
     }
 }

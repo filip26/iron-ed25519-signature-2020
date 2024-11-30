@@ -3,27 +3,28 @@ package com.apicatalog.ld.signature.ed25519;
 import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 
 import com.apicatalog.controller.method.VerificationMethod;
 import com.apicatalog.jsonld.JsonLd;
 import com.apicatalog.jsonld.JsonLdError;
+import com.apicatalog.jsonld.JsonLdOptions.ProcessingPolicy;
 import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.loader.DocumentLoader;
-import com.apicatalog.ld.DocumentError;
-import com.apicatalog.ld.DocumentError.ErrorType;
 import com.apicatalog.linkedtree.adapter.NodeAdapterError;
 import com.apicatalog.linkedtree.builder.FragmentComposer;
 import com.apicatalog.linkedtree.fragment.FragmentPropertyError;
+import com.apicatalog.linkedtree.json.JsonFragment;
 import com.apicatalog.linkedtree.jsonld.JsonLdContext;
 import com.apicatalog.linkedtree.jsonld.JsonLdKeyword;
 import com.apicatalog.linkedtree.jsonld.io.JsonLdWriter;
 import com.apicatalog.multibase.Multibase;
+import com.apicatalog.vc.di.VcdiVocab;
 import com.apicatalog.vc.issuer.ProofDraft;
-import com.apicatalog.vc.model.ModelValidation;
+import com.apicatalog.vc.model.DocumentError;
+import com.apicatalog.vc.model.ModelAssertions;
 import com.apicatalog.vc.model.VerifiableMaterial;
+import com.apicatalog.vc.model.DocumentError.ErrorType;
 import com.apicatalog.vc.model.generic.GenericMaterial;
-import com.apicatalog.vcdi.VcdiVocab;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -61,7 +62,7 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
     }
 
     @Override
-    public VerifiableMaterial unsigned(Collection<String> documentContext, DocumentLoader loader, URI base) throws DocumentError {
+    public VerifiableMaterial unsigned(JsonLdContext documentContext, DocumentLoader loader, URI base) throws DocumentError {
 
         try {
             Ed25519Signature2020Proof proof = FragmentComposer.create()
@@ -74,16 +75,20 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
                     .set(VcdiVocab.CHALLENGE.name(), challenge)
                     .set(VcdiVocab.NONCE.name(), nonce)
                     .set(VcdiVocab.DOMAIN.name(), domain)
+                    .json(WRITER::compact)
                     .get(Ed25519Signature2020Proof.class);
 
-            JsonObject compacted = WRITER.compacted(proof);
+            JsonObject compacted = ((JsonFragment) proof).jsonObject();
 
-            JsonArray expanded = JsonLd.expand(JsonDocument.of(compacted)).loader(loader).base(base).get();
-
-            Collection<String> context = documentContext;
-
+            JsonArray expanded = JsonLd.expand(JsonDocument.of(compacted))
+                    .undefinedTermsPolicy(ProcessingPolicy.Fail)
+                    .loader(loader)
+                    .base(base)
+                    .get();
+            
+            JsonLdContext context = JsonLdContext.of(compacted, documentContext);
             if (compacted.containsKey(JsonLdKeyword.CONTEXT)) {
-                context = JsonLdContext.strings(compacted, context);
+                context = WRITER.contextReducer().reduce(documentContext, context);
                 compacted = Json.createObjectBuilder(compacted).remove(JsonLdKeyword.CONTEXT).build();
             }
 
@@ -145,7 +150,7 @@ public final class Ed25519Signature2020ProofDraft extends ProofDraft {
 
     @Override
     public void validate() throws DocumentError {
-        ModelValidation.assertNotNull(this::purpose, VcdiVocab.PURPOSE);
+        ModelAssertions.assertNotNull(this::purpose, VcdiVocab.PURPOSE);
 
         if (method() != null && method().id() == null) {
             throw new DocumentError(ErrorType.Missing, "VerificationMethodId");

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.apicatalog.cryptosuite.KeyGenError;
+import com.apicatalog.cryptosuite.CryptoSuiteError;
 
 @DisplayName("Keys Generation")
 @TestMethodOrder(OrderAnnotation.class)
@@ -17,7 +17,7 @@ class VcKeyGenTest {
     @Order(1)
     @Disabled
     @Test
-    void generate32L() throws KeyGenError {
+    void generate32L() throws CryptoSuiteError {
 //        KeyPair kp = Vc.generateKeys("https://w3id.org/security#Ed25519KeyPair2020").get(URI.create("urn:1"), 256);
 //        assertNotNull(kp);
 //        assertEquals("urn:1", kp.id());

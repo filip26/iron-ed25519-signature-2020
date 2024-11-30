@@ -7,7 +7,7 @@
 
     <groupId>com.apicatalog</groupId>
     <artifactId>iron-ed25519-signature-2020</artifactId>
-    <version>0.15.13-SNAPSHOT</version>
+    <version>0.15.19-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
